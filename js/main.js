@@ -19,6 +19,7 @@ var quizLength = allQuestions.length;
 
 function nextQuestion() {
   removeQuestion();
+
   if (count >= quizLength) {
     showScore();
     return;
@@ -26,40 +27,34 @@ function nextQuestion() {
 
   var choices = allQuestions[count].choices;
   var quizItem = allQuestions[count];
-
-
   var q = document.createElement("h3");
   var text = document.createTextNode(quizItem.question);
   q.appendChild(text);
   form.appendChild(q);
 
-    for (var i = 0; i < choices.length; i++) {
-      var p = document.createElement("p");
+  for (var i = 0; i < choices.length; i++) {
+    var p = document.createElement("p");
 
-      var input = document.createElement("input");
-
-      input.setAttribute("type", "radio");
-      input.setAttribute("name", "question");
-      if (i == 0) {
-        input.setAttribute("checked", "checked");
-      }
-      if (i == quizItem.correctAnswer) {
-        input.setAttribute("value", "10");
-      }
-      else {
-        input.setAttribute("value", "0");
-      }
-
-      var label = document.createElement("label");
-      var choice = document.createTextNode(choices[i]);
-      label.appendChild(choice);
-
-      p.appendChild(input);
-      p.appendChild(label);
-
-      form.appendChild(p);
+    var input = document.createElement("input");
+    input.setAttribute("type", "radio");
+    input.setAttribute("name", "question");
+    if (i == 0) {
+      input.setAttribute("checked", "checked");
+    }
+    if (i == quizItem.correctAnswer) {
+      input.setAttribute("value", "10");
+    } else {
+      input.setAttribute("value", "0");
     }
 
+    var label = document.createElement("label");
+    var choice = document.createTextNode(choices[i]);
+    label.appendChild(choice);
+
+    p.appendChild(input);
+    p.appendChild(label);
+    form.appendChild(p);
+  }
 }
 
 function removeQuestion() {
@@ -82,10 +77,13 @@ function getAnswer() {
 
 function showScore() {
   removeQuestion();
-  button.setAttribute("display", "none");
+  button.parentNode.removeChild(button);
+  var second = document.getElementById("second");
   var finalScore = document.getElementById("score");
+  second.innerHTML = "Geweldig! Dit is het resultaat:";
   finalScore.innerHTML = "Uw score is " + score;
 }
+
 
 button.addEventListener("click", getAnswer);
 button.addEventListener("click", nextQuestion);
