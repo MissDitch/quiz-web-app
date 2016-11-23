@@ -1,3 +1,8 @@
+var count = 0;
+var score = 0;
+var button = document.getElementById("btn");
+var form = document.form1;
+
 var allQuestions = [
   {
     question: "Who is Prime Minister of the United Kingdom?",
@@ -10,24 +15,18 @@ var allQuestions = [
     correctAnswer:3
   }
 ];
-
 var quizLength = allQuestions.length;
-var count = 0;
-var score = 0;
-var button = document.getElementById("btn");
-var choices = allQuestions[count].choices;
-var quizItem = allQuestions[count];
-var form = document.form1;
 
-/*
-while (count <= quizLength ) {
-}
-if (count > quizLength) {
-  showScore();
-}
-*/
 function nextQuestion() {
   removeQuestion();
+  if (count >= quizLength) {
+    showScore();
+    return;
+  }
+
+  var choices = allQuestions[count].choices;
+  var quizItem = allQuestions[count];
+
 
   var q = document.createElement("h3");
   var text = document.createTextNode(quizItem.question);
@@ -75,7 +74,6 @@ function getAnswer() {
   for (var i = 0; i < radios.length; i++) {
     if (radios[i].checked) {
       value = parseInt(radios[i].value);
-
     }
   }
   count++;
@@ -83,12 +81,13 @@ function getAnswer() {
 }
 
 function showScore() {
+  removeQuestion();
+  button.setAttribute("display", "none");
   var finalScore = document.getElementById("score");
   finalScore.innerHTML = "Uw score is " + score;
 }
 
 button.addEventListener("click", getAnswer);
-//button.addEventListener("click", removeQuestion);
 button.addEventListener("click", nextQuestion);
 
 nextQuestion();
