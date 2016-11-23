@@ -34,13 +34,12 @@ function nextQuestion() {
 
   for (var i = 0; i < choices.length; i++) {
     var p = document.createElement("p");
+    p.setAttribute("class", "answer");
 
     var input = document.createElement("input");
     input.setAttribute("type", "radio");
     input.setAttribute("name", "question");
-    if (i == 0) {
-      input.setAttribute("checked", "checked");
-    }
+
     if (i == quizItem.correctAnswer) {
       input.setAttribute("value", "10");
     } else {
@@ -65,14 +64,22 @@ function removeQuestion() {
 
 function getAnswer() {
   var value = 0;
+  var clicked = false;
   var radios = document.form1.elements["question"];
   for (var i = 0; i < radios.length; i++) {
-    if (radios[i].checked) {
-      value = parseInt(radios[i].value);
-    }
+      if (radios[i].checked) {
+        clicked = true;
+        value = parseInt(radios[i].value);
+      }
   }
-  count++;
-  score += value;
+  if (clicked) {
+    count++;
+    score += value;
+    nextQuestion();
+  }
+  else {
+    alert("please answer!");
+  }
 }
 
 function showScore() {
@@ -86,6 +93,5 @@ function showScore() {
 
 
 button.addEventListener("click", getAnswer);
-button.addEventListener("click", nextQuestion);
 
 nextQuestion();
