@@ -134,17 +134,17 @@ function showScore() {
 
   var result = document.getElementById("result");
   var finalScore = document.getElementById("score");
-  var leng = allQuestions.length
-  if (score >= leng - 1) {
+  
+  if (totalScore == allQuestions.length) {
     result.innerHTML = "Great! Your score is " + totalScore + "!";
   }
-  if (score <= 1) {
+  else if (totalScore <= 1) {
     result.innerHTML = "Not into politics are you? Your score is " + totalScore + "!";
   }
   else {
     result.innerHTML = "Well that's not too bad! Your score is " + totalScore + "!";
   }
-  
+
   //finalScore.innerHTML = "Your score is " + totalScore;
 }
 
