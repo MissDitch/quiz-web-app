@@ -106,6 +106,14 @@ textarea {
 //  display: block;
 }
 
+.buttons {
+  display: inline-block;
+}
+
+#scoreButton, #prevButton {
+  //display: none;
+}
+
 
 
 
