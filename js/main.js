@@ -101,8 +101,12 @@ function showQuestion() {
 
 function previousQuestion() {
   form.innerHTML = "";
-  index--;
-  showQuestion(index);
+  $("#form1").fadeOut(500, function() {
+    index--;
+    var show = showQuestion(index);
+    $(this).attr('innerHTML', 'show').fadeIn(500);
+  });
+
 }
 
 function nextQuestion() {
@@ -112,8 +116,11 @@ function nextQuestion() {
   }
   else  {
     form.innerHTML = "";
-    index++;
-    showQuestion(index);
+    $("#form1").fadeOut(500, function() {
+      index++;
+      var show = showQuestion(index);
+      $(this).attr('innerHTML', 'show').fadeIn(500);
+    });
   }
 }
 

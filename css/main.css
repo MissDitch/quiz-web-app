@@ -102,16 +102,13 @@ textarea {
   margin: 0 auto;
 }
 
-.main input {
-//  display: block;
-}
 
 .buttons {
   display: inline-block;
 }
 
-#scoreButton, #prevButton {
-  //display: none;
+#formContainer {
+    height: 220px;
 }
 
 
