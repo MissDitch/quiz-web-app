@@ -98,15 +98,14 @@ function showQuestion() {
     form.appendChild(p);
   }
 }
-
+// http://jsfiddle.net/hvG7k/
 function previousQuestion() {
   form.innerHTML = "";
-  $("#form1").fadeOut(500, function() {
+  $("#form1").fadeOut(0, function() {
     index--;
     var show = showQuestion(index);
-    $(this).attr('innerHTML', 'show').fadeIn(500);
+    $(this).attr('innerHTML', 'show').fadeIn(700);
   });
-
 }
 
 function nextQuestion() {
@@ -116,26 +115,37 @@ function nextQuestion() {
   }
   else  {
     form.innerHTML = "";
-    $("#form1").fadeOut(500, function() {
+    $("#form1").fadeOut(0, function() {
       index++;
       var show = showQuestion(index);
-      $(this).attr('innerHTML', 'show').fadeIn(500);
+      $(this).attr('innerHTML', 'show').fadeIn(700);
     });
   }
 }
 
 function showScore() {
   prevButton.style.display = "none";
+  scoreButton.style.display = "none";
   var totalScore = 0;
   for (var i = 0; i < storedAnswers.length; i++) {
     var score = parseInt(storedAnswers[i].value);
     totalScore += score;
   }
 
-  var second = document.getElementById("second");
+  var result = document.getElementById("result");
   var finalScore = document.getElementById("score");
-  second.innerHTML = "Geweldig! Dit is het resultaat:";
-  finalScore.innerHTML = "Uw score is " + totalScore;
+  var leng = allQuestions.length
+  if (score >= leng - 1) {
+    result.innerHTML = "Great! Your score is " + totalScore + "!";
+  }
+  if (score <= 1) {
+    result.innerHTML = "Not into politics are you? Your score is " + totalScore + "!";
+  }
+  else {
+    result.innerHTML = "Well that's not too bad! Your score is " + totalScore + "!";
+  }
+  
+  //finalScore.innerHTML = "Your score is " + totalScore;
 }
 
 prevButton.addEventListener("click", previousQuestion);
