@@ -1,3 +1,5 @@
+$(document).foundation()
+
 var index = 0;
 var formContainer = document.getElementById("formContainer");
 var form = document.form1;
@@ -25,6 +27,7 @@ var allQuestions = [
     correctAnswer:2
   }
 ];
+
 var quizLength = allQuestions.length;
 
 function showQuestion() {
@@ -63,7 +66,7 @@ function showQuestion() {
 
   for (var i = 0; i < choices.length; i++) {
     var p = document.createElement("p");
-    p.setAttribute("class", "answer");
+  //  p.setAttribute("class", "");
 
     var input = document.createElement("input");
     input.setAttribute("id", i);
@@ -133,19 +136,18 @@ function showScore() {
   }
 
   var result = document.getElementById("result");
-  var finalScore = document.getElementById("score");
-  
+  var h2 = document.createElement("h2");
+  result.appendChild(h2);
+
   if (totalScore == allQuestions.length) {
-    result.innerHTML = "Great! Your score is " + totalScore + "!";
+    h2.innerHTML = "Great! Your score is " + totalScore + "!";
   }
   else if (totalScore <= 1) {
-    result.innerHTML = "Not into politics are you? Your score is " + totalScore + "!";
+    h2.innerHTML = "Not into politics are you? Your score is " + totalScore + "!";
   }
   else {
-    result.innerHTML = "Well that's not too bad! Your score is " + totalScore + "!";
+    h2.innerHTML = "Well that's not too bad! Your score is " + totalScore + "!";
   }
-
-  //finalScore.innerHTML = "Your score is " + totalScore;
 }
 
 prevButton.addEventListener("click", previousQuestion);
@@ -153,3 +155,7 @@ nextButton.addEventListener("click", nextQuestion);
 scoreButton.addEventListener("click", showScore);
 
 showQuestion();
+/*
+var json = JSON.stringify(allQuestions);
+document.write(json);
+*/

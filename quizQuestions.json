@@ -1,0 +1,17 @@
+[
+  {
+    "question":"Who is Prime Minister of the United Kingdom?",
+    "choices":["David Cameron","Gordon Brown","Winston Churchill","Tony Blair"],
+    "correctAnswer":0
+  },
+  {
+    "question":"Who is Prime Minister of the Netherlands?",
+    "choices":["Diederik Samson","Marc Rutte","Geert Wilders","Alexander Pechtold"],
+    "correctAnswer":1
+  },
+  {
+    "question":"In which city does the Dutch government reside?",
+    "choices":["Rotterdam","Amsterdam","The Hague","Utrecht"],
+    "correctAnswer":2
+  }
+]
