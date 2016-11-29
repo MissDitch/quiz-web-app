@@ -10,7 +10,7 @@
     <script src="js/vendor/modernizr-2.8.3.min.js"></script>
   </head>
 
-  <body class="default-primary-color">
+  <body>
 
    <div class="title-bar" data-responsive-toggle="main-menu" data-hide-for="medium">
       <button class="menu-icon" type="button" data-toggle></button>
@@ -25,21 +25,21 @@
       </div>
 
       <div id="topBarRight" class="top-bar-right">
-        <ul class="menu" data-responsive-menu="drilldown medium-dropdown">
-          <li id="logout"><a href="#">Log out</a></li>
-          <li id="user"><a href="#">username</a></li>
+        <ul class="menu" data-responsive-menu="medium-dropdown">
+          <li ><a id="user" href="#">username</a></li>
+          <li ><a id="logout" href="#">Log out</a></li>
         </ul>
       </div>
     </div>
 
 
 
-<!--    <div class="row">
-      <div class="large-12 columns">
-        <h1>The Forest For The Trees Quiz</h1>
+   <div class="row">
+      <div class="welcome large-12 columns">
+        <h4 id="welcome">Please log in to do the quiz! <br> First time here? Create an account</h4>
       </div>
     </div>
--->
+
     <div class="row">
       <div id="login" class="loginMain large-4 medium-6 small-12 columns ">
         <form id="" action="" class="loginForm" name="loginForm">
@@ -86,7 +86,7 @@
 
 
     <div class="row">
-      <div id ="quiz" class="callout default-primary-color large-12 columns">    
+      <div id ="quiz" class="callout default-primary-color large-12 columns">
 
     <!-- quiz question area  -->
         <div class="row">
@@ -98,16 +98,16 @@
 
         <div class="row">
           <div class="quizButtons large-10 medium-10 medium-push-1 columns">
-            <div id="previous" class="buttons large-2">
-              <input type="button" id="prevButton" value="Previous" />
+            <div id="previous"  class="quizButton large-2">
+              <input type="button" id="prevButton" class="buttons" value="Previous" />
             </div>
 
-            <div id="next" class="buttons large-2">
-              <input type="button" id="nextButton" value="Next" />
+            <div id="next"  class="quizButton large-2">
+              <input type="button" id="nextButton" class="buttons" value="Next" />
             </div>
 
-            <div id="score" class="buttons large-2">
-              <input type="button" id="scoreButton" value="Show Score" />
+            <div id="score" class="quizButton large-2">
+              <input type="button" id="scoreButton" class="buttons" value="Show Score" />
             </div>
           </div>
         </div>

@@ -5,13 +5,16 @@ if (Modernizr.localstorage) {
 } else {
   alert("no native support for HTML5 storage: (maybe try dojox.storage or a third-party solution ");
 }
+
 var topBarRight = document.getElementById("topBarRight");
 var login = document.getElementById("login");
 var input1 = document.getElementById("userName");
 var input2 = document.getElementById("passWord");
-input1.value = "";
-input2.value = "";
+//input1.value = "";
+//input2.value = "";
 
+var logout = document.getElementById("logout");
+var user = document.getElementById("user");
 
 var loginForm = document.loginForm;
 var loginBtn = document.getElementById("loginBtn");
@@ -85,6 +88,7 @@ function createAccount(username, password) {
   passWarning.innerHTML = "";
   localStorage.setItem("userName", username);
   localStorage.setItem("passWord", password);
+  localStorage.setItem("visit", 0);
   passWarning.innerHTML = "Account created, please enter your username and password";
 //  alert ("account created");
   input1.value = "";
@@ -93,13 +97,25 @@ function createAccount(username, password) {
 
 
 function logIn(username, password) {
+  passWarning.innerHTML = "";
   var storedUserName = localStorage.getItem("userName");
   var storedPassWord = localStorage.getItem("passWord");
+  var visit = parseInt(localStorage.getItem("visit"));
+  visit++;
+  localStorage.setItem("visit", visit);
+  var welcome = document.getElementById("welcome");
 
   if (storedUserName == username  && storedPassWord == password) {
     login.setAttribute("style", "display:none");
     topBarRight.setAttribute("style", "display:visible");
+    user.innerHTML = storedUserName;
     quiz.setAttribute("style", "display:visible");
+    if (visit == 1) {
+      welcome.innerHTML = "Welcome to this quiz, " + storedUserName + "!";
+    }
+    else if (visit > 1) {
+      welcome.innerHTML = "Welcome back to this quiz, " + storedUserName + "!";
+    }
   }
   else {
   //  alert("username or password are not correct, please try again");
@@ -110,6 +126,14 @@ function logIn(username, password) {
   }
   input1.value = "";
   input2.value = "";
+}
+
+function logOut(e) {
+  e.preventDefault();
+  login.setAttribute("style", "display:visible");
+  topBarRight.setAttribute("style", "display:none");
+  quiz.setAttribute("style", "display:none");
+
 }
 
 
@@ -190,6 +214,8 @@ function showQuestion() {
 }
 // http://jsfiddle.net/hvG7k/
 function previousQuestion() {
+  welcome.innerHTML = "";
+
   form.innerHTML = "";
   $("#form1").fadeOut(0, function() {
     index--;
@@ -204,6 +230,8 @@ function nextQuestion() {
     return;
   }
   else  {
+    welcome.innerHTML = "";
+
     form.innerHTML = "";
     $("#form1").fadeOut(0, function() {
       index++;
@@ -241,6 +269,8 @@ function showScore() {
 loginBtn.addEventListener("click", checkForm);
 //loginBtn.addEventListener("click", checkForm);
 accountBtn.addEventListener("click", checkForm);
+
+logout.addEventListener("click", logOut);
 
 prevButton.addEventListener("click", previousQuestion);
 nextButton.addEventListener("click", nextQuestion);

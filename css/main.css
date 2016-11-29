@@ -25,14 +25,22 @@
         color: #fff; }
 
 /* general */
-input[type="text"] {
+body {
+  background-color: #8BC34A;
+  color: #212121;
+}
+.welcome {
+    margin: 1.5rem 0 0 0;
+}
+
+
+input[type="text"], input[type="password"] {
   margin-bottom: 0.1rem;
 }
 input[type="button"], input[type="submit"] {
   border: none;
   border-radius: 5rem;
-  background-color: #7c4dff;
-  color: #ffffff;
+  background-color: #7c4dff;  //deep purple
   padding: 1.0rem 1.0rem;
   margin-right: 1rem;
 }
@@ -43,8 +51,12 @@ label {
   text-align: left;
   font-weight: bold;
 }
+
 .buttons {
-//  display: inline-block;
+  padding: 1rem;
+  font-size: smaller;
+  font-weight: bold;
+  display: inline-block;
 }
 
 /* login section */
@@ -57,12 +69,12 @@ label {
 }
 
 .warning {
-//  padding-left: 2rem;
   font-weight: bold;
   color: #D32F2F;
 }
 .submit {
   margin: 1rem 1.5rem;
+  color: #ffffff;
 }
 
 /* quiz section */
@@ -73,25 +85,29 @@ label {
   margin: 1.5rem 0;
 }
 .main h3 {
-    margin-bottom: 1.5rem;
-}
-.quizButtons {
-    margin: 1rem 0;
-}
-.buttons {
-  display: inline-block;
-}
-#prevButton, #nextButton, #scoreButton {
-  background: #8BC34A;
-  color: #212121;
-  font-size: smaller;
-}
-#scoreButton {
-  background: #FFC107;
+  margin-bottom: 1.5rem;
 }
 .answer p{
   margin-bottom: 0.1rem;
 }
+.quizButtons {
+  margin: 1rem 0;
+  color: #ffffff;
+}
+.quizButton {
+  display: inline-block;
+}
+
+#prevButton, #nextButton {
+  background: #7c4dff;  //deep purple
+}
+#scoreButton {
+  background: #FFC107;  //amber
+}
+#score {
+  color: #212121;
+}
+
 
 
 
