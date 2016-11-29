@@ -1,5 +1,28 @@
 $(document).foundation()
 
+if (Modernizr.localstorage) {
+  // window.localStorage is available!
+} else {
+  alert("no native support for HTML5 storage: (maybe try dojox.storage or a third-party solution ");
+}
+var topBarRight = document.getElementById("topBarRight");
+var login = document.getElementById("login");
+var input1 = document.getElementById("userName");
+var input2 = document.getElementById("passWord");
+input1.value = "";
+input2.value = "";
+
+
+var loginForm = document.loginForm;
+var loginBtn = document.getElementById("loginBtn");
+var accountBtn = document.getElementById("accountBtn");
+var userWarning = document.getElementById("userWarning");
+var passWarning = document.getElementById("passWarning");
+
+var quiz = document.getElementById("quiz");
+quiz.style.display = "none";
+topBarRight.style.display = "none";
+
 var index = 0;
 var formContainer = document.getElementById("formContainer");
 var form = document.form1;
@@ -30,6 +53,68 @@ var allQuestions = [
 
 var quizLength = allQuestions.length;
 
+
+function checkForm(e) {
+  e.preventDefault();
+  userWarning.innerHTML = "";
+  var userName = input1.value;
+  var passWord = input2.value;
+
+  if (userName == "" || passWord == "") {
+    if (userName == "") {
+      userWarning.innerHTML = "Please enter your username";
+      loginForm.userName.focus();
+    }
+    else {
+      passWarning.innerHTML = "Please enter your password";
+      loginForm.passWord.focus();
+    }
+  }
+  else {
+    if (e.target == loginBtn) {
+      logIn(userName, passWord);
+    }
+    if (e.target == accountBtn) {
+      createAccount(userName, passWord);
+    }
+  }
+}
+
+function createAccount(username, password) {
+  userWarning.innerHTML = "";
+  passWarning.innerHTML = "";
+  localStorage.setItem("userName", username);
+  localStorage.setItem("passWord", password);
+  passWarning.innerHTML = "Account created, please enter your username and password";
+//  alert ("account created");
+  input1.value = "";
+  input2.value = "";
+}
+
+
+function logIn(username, password) {
+  var storedUserName = localStorage.getItem("userName");
+  var storedPassWord = localStorage.getItem("passWord");
+
+  if (storedUserName == username  && storedPassWord == password) {
+    login.setAttribute("style", "display:none");
+    topBarRight.setAttribute("style", "display:visible");
+    quiz.setAttribute("style", "display:visible");
+  }
+  else {
+  //  alert("username or password are not correct, please try again");
+    passWarning.innerHTML = "Username or password are not correct, <br>please try again";
+    input1.value = "";
+    input2.value = "";
+    loginForm.userName.focus();
+  }
+  input1.value = "";
+  input2.value = "";
+}
+
+
+
+
 function showQuestion() {
   if(index == 0) {
     prevButton.style.display = "none";
@@ -40,7 +125,9 @@ function showQuestion() {
   if(index == quizLength) {
     scoreButton.style.display = "inline";
     nextButton.style.display = "none";
-    form.innerHTML = "";
+    var h2 = document.createElement("h2");
+    h2.innerHTML = "That's it! Would you like to see your score?";
+    form.appendChild(h2);
     return;
   }
   else {
@@ -107,7 +194,7 @@ function previousQuestion() {
   $("#form1").fadeOut(0, function() {
     index--;
     var show = showQuestion(index);
-    $(this).attr('innerHTML', 'show').fadeIn(700);
+    $(this).attr('innerHTML', 'show').fadeIn(300);
   });
 }
 
@@ -121,12 +208,13 @@ function nextQuestion() {
     $("#form1").fadeOut(0, function() {
       index++;
       var show = showQuestion(index);
-      $(this).attr('innerHTML', 'show').fadeIn(700);
+      $(this).attr('innerHTML', 'show').fadeIn(300);
     });
   }
 }
 
 function showScore() {
+  form.innerHTML = "";
   prevButton.style.display = "none";
   scoreButton.style.display = "none";
   var totalScore = 0;
@@ -135,24 +223,31 @@ function showScore() {
     totalScore += score;
   }
 
-  var result = document.getElementById("result");
   var h2 = document.createElement("h2");
-  result.appendChild(h2);
+  form.appendChild(h2);
 
   if (totalScore == allQuestions.length) {
     h2.innerHTML = "Great! Your score is " + totalScore + "!";
   }
   else if (totalScore <= 1) {
-    h2.innerHTML = "Not into politics are you? Your score is " + totalScore + "!";
+    h2.innerHTML = "You could use a litte practice! Your score is " + totalScore + ".";
   }
   else {
-    h2.innerHTML = "Well that's not too bad! Your score is " + totalScore + "!";
+    h2.innerHTML = "Well that's not too bad! Your score is " + totalScore + ".";
   }
 }
+
+
+loginBtn.addEventListener("click", checkForm);
+//loginBtn.addEventListener("click", checkForm);
+accountBtn.addEventListener("click", checkForm);
 
 prevButton.addEventListener("click", previousQuestion);
 nextButton.addEventListener("click", nextQuestion);
 scoreButton.addEventListener("click", showScore);
+
+//localStorage.setItem("userName", "");
+//localStorage.setItem("passWord", "");
 
 showQuestion();
 /*

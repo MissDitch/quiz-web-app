@@ -7,31 +7,74 @@
     <title>Quiz app</title>
     <link rel="stylesheet" href="css/foundation.css">
     <link rel="stylesheet" href="css/main.css">
+    <script src="js/vendor/modernizr-2.8.3.min.js"></script>
   </head>
 
-  <body class="dark-primary-color">
+  <body class="default-primary-color">
 
-    <div class="row">
+   <div class="title-bar" data-responsive-toggle="main-menu" data-hide-for="medium">
+      <button class="menu-icon" type="button" data-toggle></button>
+      <div class="title-bar-title">Quiz</div>
+    </div>
+
+    <div class="top-bar" id="main-menu">
+      <div class="top-bar-left">
+        <ul class=" menu" data-dropdown-menu>
+          <li class="menu-text">The Forest For The Trees</li>
+        </ul>
+      </div>
+
+      <div id="topBarRight" class="top-bar-right">
+        <ul class="menu" data-responsive-menu="drilldown medium-dropdown">
+          <li id="logout"><a href="#">Log out</a></li>
+          <li id="user"><a href="#">username</a></li>
+        </ul>
+      </div>
+    </div>
+
+
+
+<!--    <div class="row">
       <div class="large-12 columns">
         <h1>The Forest For The Trees Quiz</h1>
       </div>
     </div>
-
+-->
     <div class="row">
-      <div class="large-12 columns loginMain">
-        <form id="" action="" loginForm name="loginForm">
-          <div class="login">
-            <label>Username</label>
-            <input type="text" name="username" placeholder="Username" autofocus="true"/>
+      <div id="login" class="loginMain large-4 medium-6 small-12 columns ">
+        <form id="" action="" class="loginForm" name="loginForm">
+
+          <div class="row">
+            <div class="login">
+              <div>
+                <label>Username</label>
+                <input type="text" id="userName" name="userName" placeholder="Username" autofocus="true"/>
+              </div>
+
+              <div class="warning">
+                <small id="userWarning" class=""></small>
+              </div>
+            </div>
           </div>
 
-          <div class="login">
-            <label>Password</label>
-            <input type="password" name="password" placeholder="Password"/>
+          <div class="row">
+            <div class="login">
+              <div>
+                <label>Password</label>
+                <input type="password" id="passWord" name="passWord" placeholder="Password"/>
+              </div>
+
+              <div class="warning">
+                <small id="passWarning" class=""></small>
+              </div>
+            </div>
           </div>
 
-          <div class="submit">
-            <input type="submit" id="submitBtn" class="accent-color" value="Login" />
+          <div class="row">
+            <div class="submit">
+              <input type="submit" id="loginBtn" class="buttons" value="Login" />
+              <input type="submit" id="accountBtn" class="buttons" value="Create Account " />
+            </div>
           </div>
 
         </form>
@@ -43,42 +86,30 @@
 
 
     <div class="row">
-      <div class="large-12 columns">
-        <div class="callout default-primary-color">
-          <div class="row">
-            <div class="large-10 medium-10 medium-push-1 columns">
-              <h2 id="result"></h2>
+      <div id ="quiz" class="callout default-primary-color large-12 columns">    
+
+    <!-- quiz question area  -->
+        <div class="row">
+          <div id="formContainer" class="main large-10 medium-10 medium-push-1 columns ">
+            <form id="form1" class="answer" action="" name="form1">
+            </form>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="quizButtons large-10 medium-10 medium-push-1 columns">
+            <div id="previous" class="buttons large-2">
+              <input type="button" id="prevButton" value="Previous" />
+            </div>
+
+            <div id="next" class="buttons large-2">
+              <input type="button" id="nextButton" value="Next" />
+            </div>
+
+            <div id="score" class="buttons large-2">
+              <input type="button" id="scoreButton" value="Show Score" />
             </div>
           </div>
-
-          <div class="row">
-
-            <div id="formContainer" class="large-10 medium-10 medium-push-1 columns main">
-
-              <form id="form1" class="answer" action="" name="form1">
-              </form>
-
-            </div>
-          </div>
-
-          <div class="row">
-            <div class="large-10 medium-10 medium-push-1 columns">
-
-              <div id="previous" class="large-2 buttons ">
-                <input type="button" id="prevButton" value="Previous" />
-              </div>
-
-              <div id="next" class="large-2 buttons ">
-                <input type="button" id="nextButton" value="Next" />
-              </div>
-
-              <div id="score" class="large-2 buttons">
-                <input type="button" id="scoreButton" value="Show Score" />
-              </div>
-
-            </div>
-          </div>
-
         </div>
       </div>
     </div>
