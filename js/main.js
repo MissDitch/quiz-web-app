@@ -43,8 +43,6 @@ var scoreButton = document.getElementById("scoreButton");
 var storedAnswers = [];
 
 
-
-
 function checkForm(e) {
   e.preventDefault();
   userWarning.innerHTML = "";
@@ -135,7 +133,7 @@ logout.addEventListener("click", logOut);
 function loadJSON(callback) {
   var xobj = new XMLHttpRequest();
   xobj.overrideMimeType("application/json");
-  xobj.open('GET', 'file:///C:/Users/Marian standaard/Projecten/quiz-web-app/js/quizQuestions.json', true);
+  xobj.open('GET', 'http://localhost/quiz-web-app/js/quizQuestions.json', true);
   xobj.onreadystatechange = function () {
     if (xobj.readyState == 4 && xobj.status == 200) {
       /* Required use of an anonymous callback as .open will NOT return a value
