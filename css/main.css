@@ -24,6 +24,7 @@
       .top-bar ul li a {
         color: #fff; }
 
+
 /* general */
 body {
   background-color: #8BC34A;
@@ -31,6 +32,7 @@ body {
 }
 .welcome {
     margin: 1.5rem 0 0 0;
+    color: #ffffff;
 }
 
 
@@ -203,12 +205,17 @@ label {
    These examples override the primary ('mobile first') styles.
    Modify as content requires.
    ========================================================================== */
+@media only screen and (max-width: 34,995rem) {
+
+}
 
 @media only screen and (min-width: 35rem) {
     /* Style adjustments for viewports that meet the condition */
+
     .top-bar-left ul li {
         font-size: 1.5rem;
     }
+
 }
 
 @media print,
