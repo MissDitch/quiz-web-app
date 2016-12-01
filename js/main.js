@@ -49,8 +49,8 @@ function checkForm(e) {
   var userName = input1.value;
   var passWord = input2.value;
 
-  if (userName == "" || passWord == "") {
-    if (userName == "") {
+  if (userName === "" || passWord === "") {
+    if (userName === "") {
       userWarning.innerHTML = "Please enter your username";
       loginForm.userName.focus();
     }
@@ -60,11 +60,11 @@ function checkForm(e) {
     }
   }
   else {
-    if (e.target == loginBtn) {
+    if (e.target === loginBtn) {
       //if user clicked the login button
       logIn(userName, passWord);
     }
-    if (e.target == accountBtn) {
+    if (e.target === accountBtn) {
       //if user clicked the create account button
       createAccount(userName, passWord);
     }
@@ -91,14 +91,14 @@ function logIn(username, password) {
 
   localStorage.setItem("visit", visit);
 
-  if (storedUserName == username  && storedPassWord == password) {
+  if (storedUserName === username  && storedPassWord === password) {
     login.setAttribute("style", "display:none");
     topBarRight.setAttribute("style", "display:visible");
     //hides login panel and shows username and logout option
     user.innerHTML = storedUserName;
     quiz.setAttribute("style", "display:visible");
     //now welcome message and first question are shown
-    if (visit == 1) {
+    if (visit === 1) {
       welcome.innerHTML = "Welcome to this quiz, " + storedUserName + "!";
     }
     else if (visit > 1) {
@@ -123,6 +123,16 @@ function logOut(e) {
   quiz.setAttribute("style", "display:none");
 }
 
+function storeAnswer(e) {
+    var element = e.target;
+    var answer = {
+      id: element.id,
+      value: element.value
+    };
+    storedAnswers[index] = answer;
+}
+
+
 
 // thanks to https://codepen.io/KryptoniteDove/post/load-json-file-locally-using-pure-javascript
 // this function loads the quiz questions from external JSON file
@@ -132,7 +142,7 @@ function loadJSON(callback) {
   xobj.open('GET', 'http://localhost/quiz-web-app/js/quizQuestions.json', true);
   //xobj.open('GET', 'file:///C:/Users/Marian standaard/Projecten/quiz-web-app/js/quizQuestions.json', true);
   xobj.onreadystatechange = function () {
-    if (xobj.readyState == 4 && xobj.status == 200) {
+    if (xobj.readyState === 4 && xobj.status === 200) {
       /* Required use of an anonymous callback as .open will NOT return a value
       but simply returns undefined in asynchronous mode  */
       callback(xobj.responseText);
@@ -145,6 +155,7 @@ function init() {
   loadJSON(function(response) {
     // Parse JSON string into object
     var actual_JSON = JSON.parse(response);
+    console.log(actual_JSON);
     //quiz questions have been loaded
     var quizLength = actual_JSON.length;
 
@@ -153,14 +164,14 @@ function init() {
 
       // display of buttons:
 
-      if(index == 0) {
+      if(index === 0) {
         //there is no previous question when first question is shown
         prevButton.style.display = "none";
       }
       if (index > 0) {
         prevButton.style.display = "inline";
       }
-      if(index == quizLength) {
+      if(index === quizLength) {
         //only if last question is shown user can see the score
         scoreButton.style.display = "inline";
         nextButton.style.display = "none";
@@ -199,7 +210,7 @@ function init() {
         input.setAttribute("type", "radio");
         input.setAttribute("name", "question");
 
-        if (i == quizItem.correctAnswer) {
+        if (i === quizItem.correctAnswer) {
           input.setAttribute("value", "1");
         } else {
           input.setAttribute("value", "0");
@@ -210,14 +221,7 @@ function init() {
           input.setAttribute("checked", "checked");
         }
         //chosen answer is stored in a separate array: storedAnswers
-        input.onclick = function(e) {
-          var element = e.target;
-          var answer = {
-            id: element.id,
-            value: element.value
-          };
-          storedAnswers.push(answer);
-        }
+        input.addEventListener("click", storeAnswer);
 
         var label = document.createElement("label");
         var choice = document.createTextNode(choices[i]);
@@ -229,6 +233,8 @@ function init() {
       }
     }
 
+
+
     showQuestion();
 
     // http://jsfiddle.net/hvG7k/
@@ -238,14 +244,14 @@ function init() {
       form.innerHTML = "";
       $("#form1").fadeOut(0, function() {
         index--;
-        var show = showQuestion(index);
+        var show = showQuestion();
         $(this).attr('innerHTML', 'show').fadeIn(300);
       });
     }
 
     function nextQuestion() {
       //shows next question only if answer has been chosen
-      if (storedAnswers[index] == null) {
+      if (storedAnswers[index] === null) {
         warning.innerHTML = "Please choose an answer!";
         return;
       }
@@ -255,7 +261,7 @@ function init() {
         form.innerHTML = "";
         $("#form1").fadeOut(0, function() {
           index++;
-          var show = showQuestion(index);
+          var show = showQuestion();
           $(this).attr('innerHTML', 'show').fadeIn(300);
         });
       }
@@ -274,7 +280,7 @@ function init() {
       var h2 = document.createElement("h2");
       form.appendChild(h2);
 
-      if (totalScore == actual_JSON.length) {
+      if (totalScore === actual_JSON.length) {
         h2.innerHTML = "Great! Your score is " + totalScore + "!";
       }
       else if (totalScore <= 1) {
