@@ -38,17 +38,11 @@ var index = 0;
 quiz.style.display = "none";
 topBarRight.style.display = "none";
 
-<<<<<<< HEAD
 loginBtn.addEventListener("click", checkForm);
 accountBtn.addEventListener("click", checkForm);
 logout.addEventListener("click", logOut);
 
 //checks if username and password are entered
-||||||| merged common ancestors
-
-
-=======
->>>>>>> a66a4ef3709b84ec6bd8fa6143dc0d8208a48b26
 function checkForm(e) {
   e.preventDefault();
   userWarning.innerHTML = "";
@@ -238,8 +232,6 @@ function init() {
         form.appendChild(p);
       }
     }
-
-
 
     showQuestion();
 
