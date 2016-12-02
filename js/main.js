@@ -71,12 +71,31 @@ function checkForm(e) {
   }
 }
 
+function Player(username, password) {
+  this.userName = username;
+  this.passWord = password;
+  this.getUserName = function() {
+    return this.userName;
+  }
+  this.getPassWord = function() {
+    return this.passWord;
+  }
+  this.storedScores = [];
+  this.visits = 0;
+}
+
+
+var actualPlayer;
+var playerString = localStorage.getItem("playerArray");
+var playerArray = JSON.parse(playerString);
+
 function createAccount(username, password) {
   userWarning.innerHTML = "";
   passWarning.innerHTML = "";
-  localStorage.setItem("userName", username);
-  localStorage.setItem("passWord", password);
-  localStorage.setItem("visit", 0);
+
+  player = new Player(username, password);
+  playerArray.push(player);
+  localStorage.setItem("playerArray", JSON.stringify(playerArray));
   passWarning.innerHTML = "Account created, please enter your username and password";
   input1.value = "";
   input2.value = "";
@@ -84,35 +103,38 @@ function createAccount(username, password) {
 
 function logIn(username, password) {
   passWarning.innerHTML = "";
-  var storedUserName = localStorage.getItem("userName");
-  var storedPassWord = localStorage.getItem("passWord");
-  var visit = parseInt(localStorage.getItem("visit"));
-  visit++;   //welcome message depends on value of visit
+  var playerString = localStorage.getItem("playerArray");
+  playerArray = JSON.parse(playerString);
+  console.log(playerArray);
 
-  localStorage.setItem("visit", visit);
+  for (var i = 0; i < playerArray.length; i++) {
+    var player = playerArray[i];
+    if (player.userName === username && player.passWord === password) {
+      console.log(player);
+      actualPlayer = player;
 
-  if (storedUserName === username  && storedPassWord === password) {
-    login.setAttribute("style", "display:none");
-    topBarRight.setAttribute("style", "display:visible");
-    //hides login panel and shows username and logout option
-    user.innerHTML = storedUserName;
-    quiz.setAttribute("style", "display:visible");
-    //now welcome message and first question are shown
-    if (visit === 1) {
-      welcome.innerHTML = "Welcome to this quiz, " + storedUserName + "!";
+      login.setAttribute("style", "display:none");
+      topBarRight.setAttribute("style", "display:visible");
+      //hides login panel and shows username and logout option
+      user.innerHTML = player.userName;
+      quiz.setAttribute("style", "display:visible");
+      //now welcome message and first question are shown
     }
-    else if (visit > 1) {
-      welcome.innerHTML = "Welcome back to this quiz, " + storedUserName + "!";
+    else {
+      passWarning.innerHTML = "Username or password are not correct, <br>please try again";
+      input1.value = "";
+      input2.value = "";
+      loginForm.userName.focus();
     }
-  }
-  else {
-    passWarning.innerHTML = "Username or password are not correct, <br>please try again";
     input1.value = "";
     input2.value = "";
-    loginForm.userName.focus();
   }
-  input1.value = "";
-  input2.value = "";
+  if (actualPlayer.visits === 1) {
+    welcome.innerHTML = "Welcome to this quiz, " + actualPlayer.userName + "!";
+  }
+  else if (actualPlayer.visits > 1) {
+    welcome.innerHTML = "Welcome back to this quiz, " + actualPlayer.userName + "!";
+  }
 }
 
 function logOut(e) {
@@ -121,6 +143,8 @@ function logOut(e) {
   //shows login panel and hides username and logout option
   topBarRight.setAttribute("style", "display:none");
   quiz.setAttribute("style", "display:none");
+  actualPlayer.visits += 1;
+  localStorage.setItem("playerArray", JSON.stringify(playerArray));
 }
 
 function storeAnswer(e) {
@@ -131,8 +155,6 @@ function storeAnswer(e) {
     };
     storedAnswers[index] = answer;
 }
-
-
 
 // thanks to https://codepen.io/KryptoniteDove/post/load-json-file-locally-using-pure-javascript
 // this function loads the quiz questions from external JSON file
@@ -155,7 +177,6 @@ function init() {
   loadJSON(function(response) {
     // Parse JSON string into object
     var actual_JSON = JSON.parse(response);
-    console.log(actual_JSON);
     //quiz questions have been loaded
     var quizLength = actual_JSON.length;
 
@@ -270,6 +291,7 @@ function init() {
       prevButton.style.display = "none";
       scoreButton.style.display = "none";
       var totalScore = 0;
+
       for (var i = 0; i < storedAnswers.length; i++) {
         var score = parseInt(storedAnswers[i].value);
         totalScore += score;
@@ -287,6 +309,9 @@ function init() {
       else {
         h2.innerHTML = "Well that's not too bad! Your score is " + totalScore + ".";
       }
+      actualPlayer.score = totalScore;
+      actualPlayer.storedScores.push(totalScore);
+      //setScore(user, totalScore);
     }
 
     prevButton.addEventListener("click", previousQuestion);
