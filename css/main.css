@@ -30,9 +30,12 @@ body {
   background-color: #8BC34A;
   color: #212121;
 }
-.welcome {
+.message {
     margin: 1.5rem 0 0 0;
     color: #ffffff;
+}
+#notify {
+  color: #212121;
 }
 
 
@@ -58,7 +61,7 @@ label {
   padding: 1rem;
   font-size: smaller;
   font-weight: bold;
-  display: inline-block;
+//  display: inline-block;
 }
 
 /* login section */
@@ -77,6 +80,11 @@ label {
 .submit {
   margin: 1rem 1.5rem;
   color: #ffffff;
+}
+.notify {
+  margin: 1rem 1.5rem;
+  font-weight: bold;
+  //color: #D32F2F;
 }
 
 /* quiz section */

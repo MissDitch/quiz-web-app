@@ -12,6 +12,8 @@
 
   <body>
 
+<!-- TOP AND TITLE BAR    -->
+
    <div class="title-bar" data-responsive-toggle="main-menu" data-hide-for="medium">
       <button class="menu-icon" type="button" data-toggle></button>
       <div class="title-bar-title">The Forest For The Trees Quiz</div>
@@ -32,10 +34,12 @@
       </div>
     </div>
 
+ <!--end TOP AND TITLE BAR    -->
 
+<!-- LOGIN    -->
 
    <div class="row">
-      <div class="welcome large-12 columns">
+      <div class="message large-12 columns">
         <h4 id="welcome">Please log in to do the quiz! <br> First time here? Create an account</h4>
       </div>
     </div>
@@ -43,7 +47,6 @@
     <div class="row">
       <div id="login" class="loginMain large-4 medium-6 small-12 columns ">
         <form id="" action="" class="loginForm" name="loginForm">
-
           <div class="row">
             <div class="login">
               <div>
@@ -75,20 +78,35 @@
               <input type="submit" id="loginBtn" class="buttons" value="Login" />
               <input type="submit" id="accountBtn" class="buttons" value="Create Account " />
             </div>
+            <div class="notify">
+              <small id="accountNotify" class=""></small>
+            </div>
           </div>
-
         </form>
-
       </div>
     </div>
 
+<!-- end LOGIN   -->
 
-
+<!-- QUIZ   -->
 
     <div class="row">
-      <div id ="quiz" class="callout default-primary-color large-12 columns">
+      <div id ="quizContainer" class="callout default-primary-color large-12 columns">
 
-    <!-- quiz question area  -->
+        <!-- message and start area  -->
+        <div class="row">
+          <div id="quizNotify"class="message large-12 columns">
+             <h4 id="message"></h4>
+             <div class="quizButtons large-10 medium-10 medium-push-1 columns">
+                <div class="quizButton large-2">
+                  <input type="button" id="startButton" class="buttons" value="Start quiz" />
+                  <input type="button" id="resumeButton" class="buttons" value="Resume quiz" />
+                </div>
+             </div>
+          </div>
+        </div>
+
+        <!-- quiz question area  -->
         <div class="row">
           <div id="formContainer" class="main large-10 medium-10 medium-push-1 columns ">
             <form id="form1" class="answer" action="" name="form1">
@@ -96,30 +114,29 @@
           </div>
         </div>
 
+        <!-- quiz buttons area  -->
         <div class="row">
-          <div class="quizButtons large-10 medium-10 medium-push-1 columns">
+          <div id="quizButtons" class="quizButtons large-10 medium-10 medium-push-1 columns">
             <div id="previous"  class="quizButton large-2">
               <input type="button" id="prevButton" class="buttons" value="Previous" />
             </div>
-
             <div id="next"  class="quizButton large-2">
               <input type="button" id="nextButton" class="buttons" value="Next" />
             </div>
-
             <div id="score" class="quizButton large-2">
               <input type="button" id="scoreButton" class="buttons" value="Show Score" />
             </div>
           </div>
         </div>
 
+        <!-- warning in case question is not answered  -->
         <div class="warning">
           <small id="warning" class=""></small>
         </div>
 
       </div>
     </div>
-
-
+<!-- end QUIZ   -->
 
     <script src="js/vendor/jquery.js"></script>
     <script src="js/vendor/what-input.js"></script>
