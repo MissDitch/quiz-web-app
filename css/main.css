@@ -34,6 +34,13 @@ body {
     margin: 1.5rem 0 0 0;
     color: #ffffff;
 }
+#message {
+    margin: 1.5rem 0 0 0;
+    color: #ffffff;
+    padding: 0.5rem;
+    background-color: #689F38;
+    border-radius: 0.5rem;
+}
 #notify {
   color: #212121;
 }
@@ -90,7 +97,8 @@ label {
 /* quiz section */
 .callout {
   background-color: #DCEDC8;
-  border: 1rem solid #689F38;
+  border: 1rem solid #FFC107; //amber
+  //border: 1rem solid #689F38; //dark green
   border-radius: 0.7rem;
   margin: 1.5rem 0;
 }

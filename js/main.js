@@ -35,7 +35,7 @@ var quizNotify  = document.getElementById("quizNotify");
 var allQuestions;
 var quizLength;
 var choices;
-var storedAnswers;
+//var storedAnswers;
 var index;
 var formContainer = document.getElementById("formContainer");
 var form = document.form1;
@@ -56,7 +56,7 @@ loginBtn.addEventListener("click", checkForm);
 accountBtn.addEventListener("click", checkForm);
 logout.addEventListener("click", logOut);
 startButton.addEventListener("click", startQuiz);
-resumeButton.addEventListener("click", resumeQuiz);
+resumeButton.addEventListener("click", startQuiz);
 
 // thanks to https://codepen.io/KryptoniteDove/post/load-json-file-locally-using-pure-javascript
 // this function loads the quiz questions from external JSON file
@@ -132,7 +132,6 @@ function Player(username, password) {
 Player.prototype.greet = function() {
   console.log("Hi, I'm " + this.userName);
 }
-//Player.prototype.finished = false;
 
 
 function createAccount(username, password) {
@@ -148,8 +147,6 @@ function createAccount(username, password) {
 }
 
 function logIn(username, password) {
-//  passWarning.setAttribute("style", "display:none");
-//  accountNotify.setAttribute("style", "display:none");
   createAccount.innerHTML = "";
   var playerString = localStorage.getItem("playerArray");
   playerArray = JSON.parse(playerString);
@@ -157,11 +154,10 @@ function logIn(username, password) {
 
   for (var i = 0; i < playerArray.length; i++) {
     var player = playerArray[i];
-  //  console.log(player.getUserName());
     if (player.userName === username && player.passWord === password) {
       console.log(player);
       actualPlayer = player;
-      storedAnswers = actualPlayer.storedAnswers;
+      var storedAnswers = actualPlayer.storedAnswers;
       index = actualPlayer.answerAt;
 
       login.setAttribute("style", "display:none");
@@ -205,7 +201,6 @@ function logIn(username, password) {
   }
 }
 
-
 function logOut(e) {
   e.preventDefault();
   login.setAttribute("style", "display:visible");
@@ -213,13 +208,13 @@ function logOut(e) {
   //shows login panel and hides username and logout option
   topBarRight.setAttribute("style", "display:none");
   quizContainer.setAttribute("style", "display:none");
-  if (actualPlayer.finished){
-    actualPlayer.answerAt = 0;
+  if (actualPlayer.finished) {
     actualPlayer.storedAnswers.length = 0;
+    actualPlayer.answerAt = 0;
   }
   else {
     actualPlayer.answerAt = index;
-    actualPlayer.storedAnswers = storedAnswers;
+  //  actualPlayer.storedAnswers = storedAnswers;
   }
 
   actualPlayer.visits += 1;
@@ -229,75 +224,35 @@ function logOut(e) {
 function startQuiz() {
   index = actualPlayer.answerAt;
   quizNotify.setAttribute("style", "display:none");
-  formContainer.setAttribute("style", "display:visible");
   quizButtons.setAttribute("style", "display:visible");
 
-  actualPlayer.finished = false;
-  if (storedAnswers.length > 0) {
-    //storedAnswers.splice(0, storedAnswers.length); //empty the array
-    storedAnswers.length = 0;  //empty the array
+  if (actualPlayer.finished) {
+    actualPlayer.storedAnswers.length = 0;  //empty the array
+    actualPlayer.finished = false;
+    index = 0;
   }
-  var stringQuestions = localStorage.getItem("allQuestions");
-  // Parse JSON string into object
-  allQuestions = JSON.parse(stringQuestions);
-  quizLength = allQuestions.length;
-
-  showQuestion();
-}
-
-function resumeQuiz() {
-  index = actualPlayer.answerAt;
-  quizNotify.setAttribute("style", "display:none");
-  formContainer.setAttribute("style", "display:visible");
-  quizButtons.setAttribute("style", "display:visible");
 
   var stringQuestions = localStorage.getItem("allQuestions");
   // Parse JSON string into object
   allQuestions = JSON.parse(stringQuestions);
   quizLength = allQuestions.length;
-  storedAnswers = actualPlayer.storedAnswers
 
   showQuestion();
 }
 
 function showQuestion() {
-  if(index === 0) {
-    //there is no previous question when first question is shown
-    prevButton.setAttribute("style", "display:none");
-  }
-  if (index > 0) {
-    prevButton.style.display = "inline";
-  }
-  if(index === quizLength) {
-    //only if last question is shown user can see the score
-    scoreButton.setAttribute("style", "display:visible");
-    //scoreButton.style.display = "inline";
-    nextButton.setAttribute("style", "display:none");
-    //prevButton still visible so user can go back and change answers
-    var h2 = document.createElement("h2");
-    h2.innerHTML = "That's it! Would you like to see your score?";
-    form.appendChild(h2);
-    return;
-  }
-  else {
-    nextButton.setAttribute("style", "display:visible");
-    //nextButton.style.display = "inline";
-    scoreButton.setAttribute("style", "display:none");
-  }
-
+  showQuizButtons();
   // display of question at given index:
+  formContainer.setAttribute("style", "display:visible");
+  form.innerHTML = "";
   var quizItem = allQuestions[index];
   var q = document.createElement("h3");
   var text = document.createTextNode(quizItem.question);
 
+  var storedAnswers = actualPlayer.storedAnswers;
+  var storedAnswer = storedAnswers[index];
   q.appendChild(text);
   form.appendChild(q);
-  var storedAnswer = storedAnswers[index];
-  var id;
-  //if question has been answered already
-  if (storedAnswer) {
-    id = storedAnswer.id;
-  }
 
   // display of choices, belonging to the questions at given index:
   choices = allQuestions[index].choices;
@@ -315,11 +270,15 @@ function showQuestion() {
     } else {
       input.setAttribute("value", "0");
     }
-
-    if (i == id) {
-      // if question is already answered, id has a value
-      input.setAttribute("checked", "checked");
+    //if question has been answered already
+    if (storedAnswer) {
+      var id = storedAnswer.id;
+      if (i == id) {
+        // if question is already answered, id has a value
+        input.setAttribute("checked", "checked");
+      }
     }
+
     //if radiobutton is clicked, the chosen answer is stored in a separate array: storedAnswers
     input.addEventListener("click", storeAnswer);
 
@@ -333,6 +292,31 @@ function showQuestion() {
   }
 }
 
+function showQuizButtons() {
+  if(index === 0) {
+    //there is no previous question when first question is shown
+    prevButton.setAttribute("style", "display:none");
+  }
+  if (index > 0) {
+    prevButton.setAttribute("style", "display:visible");
+  }
+  if(index === quizLength - 1) {
+    //only if last question is shown user can see the score
+    scoreButton.setAttribute("style", "display:visible");
+    //scoreButton.style.display = "inline";
+    nextButton.setAttribute("style", "display:none");
+    //prevButton still visible so user can go back and change answers
+    var h2 = document.createElement("h2");
+    h2.innerHTML = "That's it! Would you like to see your score?";
+    form.appendChild(h2);
+    return;
+  }
+  else {
+    nextButton.setAttribute("style", "display:visible");
+    //nextButton.style.display = "inline";
+    scoreButton.setAttribute("style", "display:none");
+  }
+}
 
 // http://jsfiddle.net/hvG7k/
 function previousQuestion() {
@@ -349,7 +333,7 @@ function previousQuestion() {
 function nextQuestion() {
 
   //shows next question only if answer has been chosen
-  if (storedAnswers[index] == null) {
+  if (actualPlayer.storedAnswers[index] == null) {
     warning.innerHTML = "Please choose an answer!";
     return;
   }
@@ -369,7 +353,7 @@ function storeAnswer(e) {
       id: element.id,
       value: element.value
     };
-    storedAnswers[index] = answer;
+    actualPlayer.storedAnswers[index] = answer;
 }
 
 
@@ -383,6 +367,7 @@ function showScore() {
   resumeButton.setAttribute("style", "display:none");
 
   var totalScore = 0;
+  var storedAnswers = actualPlayer.storedAnswers;
   actualPlayer.finished = true;
 
   for (var i = 0; i < storedAnswers.length; i++) {
