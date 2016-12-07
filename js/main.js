@@ -9,6 +9,7 @@ if (Modernizr.localstorage) {
 var topBarLeft = document.getElementById("topBarLeft");
 var topBarRight = document.getElementById("topBarRight");
 var user = document.getElementById("user");
+var total = document.getElementById("total");
 var logout = document.getElementById("logout");
 
 var welcome = document.getElementById("welcome");
@@ -46,12 +47,13 @@ var prevButton = document.getElementById("prevButton");
 var nextButton = document.getElementById("nextButton");
 var scoreButton = document.getElementById("scoreButton");
 
+var scoreDisplay = document.getElementById("scoreDisplay");
 
-quizContainer.setAttribute("style", "display:none");
 topBarRight.setAttribute("style", "display:none");
-
-//start.setAttribute("style", "display:none");
+quizContainer.setAttribute("style", "display:none");
 quizButtons.setAttribute("style", "display:none");
+scoreDisplay.setAttribute("style", "display:visible");
+
 loginBtn.addEventListener("click", checkForm);
 accountBtn.addEventListener("click", checkForm);
 logout.addEventListener("click", logOut);
@@ -116,23 +118,27 @@ function checkForm(e) {
 function Player(username, password) {
   this.userName = username;
   this.passWord = password;
-  this.getUserName = function() {
-    return this.userName;
-  }
-  this.getPassWord = function() {
-    return this.passWord;
-  }
   this.storedScores = [];
+  this.getSumOfScores = function() {
+    var total = 0;
+    for (var i = 0; i < this.storedScores.length; i++) {
+      var score = this.storedScores[i];
+      total += score;
+    }
+    return total;
+  }
+  this.getNameAndScore = function() {
+    return this.userName + " had scored " + this.getSumOfScores() + " points!";
+  }
   this.visits = 0;
   this.finished = true;
+  // this attribute stores the index of the question that is displayed if the player logs out before finishing the quiz
   this.answerAt = 0;
+  /* if player logs out before finishing the quiz, the answers player has already given are stored here.
+  When player logs in again, she doesnt have to check those answers again  */
   this.storedAnswers = [];
+  this.totalScore = this.getNameAndScore();
 }
-
-Player.prototype.greet = function() {
-  console.log("Hi, I'm " + this.userName);
-}
-
 
 function createAccount(username, password) {
   userWarning.innerHTML = "";
@@ -214,7 +220,6 @@ function logOut(e) {
   }
   else {
     actualPlayer.answerAt = index;
-  //  actualPlayer.storedAnswers = storedAnswers;
   }
 
   actualPlayer.visits += 1;
@@ -242,6 +247,9 @@ function startQuiz() {
 
 function showQuestion() {
   showQuizButtons();
+  if (index === quizLength) {
+    return;
+  }
   // display of question at given index:
   formContainer.setAttribute("style", "display:visible");
   form.innerHTML = "";
@@ -292,6 +300,15 @@ function showQuestion() {
   }
 }
 
+function storeAnswer(e) {
+    var element = e.target;
+    var answer = {
+      id: element.id,
+      value: element.value
+    };
+    actualPlayer.storedAnswers[index] = answer;
+}
+
 function showQuizButtons() {
   if(index === 0) {
     //there is no previous question when first question is shown
@@ -300,7 +317,7 @@ function showQuizButtons() {
   if (index > 0) {
     prevButton.setAttribute("style", "display:visible");
   }
-  if(index === quizLength - 1) {
+  if(index === quizLength) {
     //only if last question is shown user can see the score
     scoreButton.setAttribute("style", "display:visible");
     //scoreButton.style.display = "inline";
@@ -309,11 +326,9 @@ function showQuizButtons() {
     var h2 = document.createElement("h2");
     h2.innerHTML = "That's it! Would you like to see your score?";
     form.appendChild(h2);
-    return;
   }
   else {
     nextButton.setAttribute("style", "display:visible");
-    //nextButton.style.display = "inline";
     scoreButton.setAttribute("style", "display:none");
   }
 }
@@ -324,14 +339,12 @@ function previousQuestion() {
   index--;
   form.innerHTML = "";
   $("#form1").fadeOut(0, function() {
-    //index--;
     var show = showQuestion();
     $(this).attr('innerHTML', 'show').fadeIn(300);
   });
 }
 
 function nextQuestion() {
-
   //shows next question only if answer has been chosen
   if (actualPlayer.storedAnswers[index] == null) {
     warning.innerHTML = "Please choose an answer!";
@@ -344,18 +357,7 @@ function nextQuestion() {
       var show = showQuestion();
       $(this).attr('innerHTML', 'show').fadeIn(300);
     });
-
 }
-
-function storeAnswer(e) {
-    var element = e.target;
-    var answer = {
-      id: element.id,
-      value: element.value
-    };
-    actualPlayer.storedAnswers[index] = answer;
-}
-
 
 function showScore() {
   form.innerHTML = "";
@@ -375,7 +377,6 @@ function showScore() {
     totalScore += score;
   }
 
-
   if (totalScore === allQuestions.length) {
     message.innerHTML = "Great! Your score is " + totalScore + "!<br />You can do the quiz again, although you don't really need to!";
   }
@@ -389,8 +390,100 @@ function showScore() {
   actualPlayer.storedScores.push(totalScore);
 }
 
+
+function showUserScores(e) {
+  e.preventDefault();
+  var showUserScores = document.getElementById("showUserScores");
+  var showAllUsersScores = document.getElementById("showAllUsersScores");
+
+  //showAllUsersScores.setAttribute("style", "display:none");
+  while(showAllUsersScores.firstChild) {
+    showAllUsersScores.removeChild(showAllUsersScores.firstChild);
+
+  }
+
+
+  while(showUserScores.firstChild) {
+    showUserScores.removeChild(showUserScores.firstChild);
+
+  }
+
+  var userScores = actualPlayer.storedScores;
+  var string = "You got these scores: " + userScores;
+  var p = document.createElement("p");
+  //showUserScores.setAttribute("style", "display:visible");
+
+  if (userScores.length === 0) {
+    string = "You don't have any scores yet";
+  }
+  p.setAttribute("class", "scores");
+  p.innerHTML = string;
+  showUserScores.appendChild(p);
+}
+
+function showAllUsersScores(e) {
+  e.preventDefault();
+  var showAllUsersScores = document.getElementById("showAllUsersScores");
+  var showUserScores = document.getElementById("showUserScores");
+  //showUserScores.setAttribute("style", "display:none");
+
+
+    while(showAllUsersScores.firstChild) {
+      showAllUsersScores.removeChild(showAllUsersScores.firstChild);
+
+    }
+
+
+    while(showUserScores.firstChild) {
+      showUserScores.removeChild(showUserScores.firstChild);
+      
+    }
+
+
+  for (var i = 0; i < playerArray.length; i++) {
+    var scores = playerArray[i].storedScores;
+    var username = playerArray[i].userName;
+    var string;
+
+    var p = document.createElement("p");
+    if (username === actualPlayer.userName) {
+      string = "You got these scores: " + scores;
+      if (scores.length === 0) {
+        string = "You don't have any scores yet";
+      }
+      p.setAttribute("class", "emphasis");
+      p.setAttribute("id", "me");
+    }
+    else {
+      string = username + " got these scores: " + scores;
+      if (scores.length === 0) {
+        string = username + " doesn't have any scores yet";
+      }
+      p.setAttribute("class", "scores");
+    }
+
+    p.innerHTML = string;
+    showAllUsersScores.appendChild(p);
+
+    //allUsersScores += string;
+  }
+  //puts actualPlayer's scores on top of the list
+  var me = document.getElementById("me");
+  showAllUsersScores.insertBefore(me, showAllUsersScores.firstChild);
+
+
+  //showAllUsersScores.innerHTML = allUsersScores;
+}
+
+var myScores = document.getElementById("myScores");
+var everyoneScores = document.getElementById("everyoneScores");
+
+myScores.addEventListener("click", showUserScores);
+everyoneScores.addEventListener("click", showAllUsersScores);
+
 prevButton.addEventListener("click", previousQuestion);
 nextButton.addEventListener("click", nextQuestion);
 scoreButton.addEventListener("click", showScore);
+
 
 init();

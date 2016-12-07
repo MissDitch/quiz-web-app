@@ -21,15 +21,17 @@
 
     <div class="top-bar" id="main-menu">
       <div id="topBarLeft" class="top-bar-left">
-        <ul class=" menu" data-dropdown-menu>
+        <ul class=" menu hide-for-small-only" data-dropdown-menu>
           <li class="menu-text">The Forest For The Trees</li>
         </ul>
       </div>
 
       <div id="topBarRight" class="top-bar-right">
-        <ul class="menu" data-responsive-menu="medium-dropdown">
-          <li ><a id="user" href="#">username</a></li>
-          <li ><a id="logout" href="#">Log out</a></li>
+        <ul class="menu dropdown vertical medium-horizontal" data-responsive-menu="accordion medium-dropdown">
+          <li><a id="user" class="" href="#">username</a></li>
+          <li><a id="myScores" href="#">Show my scores</a></li>
+          <li><a id="everyoneScores" href="#">How am I doing so far?</a></li>
+          <li><a id="logout" href="#">Log out</a></li>
         </ul>
       </div>
     </div>
@@ -137,6 +139,13 @@
       </div>
     </div>
 <!-- end QUIZ   -->
+
+<!--  SCORE DISPLAY  -->
+<div id="scoreDisplay" class="row">
+  <div id="showUserScores" class=""></div>
+  <div id="showAllUsersScores" class=""></div>
+</div>
+
 
     <script src="js/vendor/jquery.js"></script>
     <script src="js/vendor/what-input.js"></script>

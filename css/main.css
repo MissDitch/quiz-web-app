@@ -16,14 +16,27 @@
   padding: 0.9rem; }
 
 .top-bar {
-  background: #689F38; }
-  .top-bar ul {
-    background: #689F38; }
-    .top-bar ul li {
-      background: #689F38; }
-      .top-bar ul li a {
-        color: #fff; }
-
+  background: #689F38;
+}
+.top-bar ul {
+  background: #689F38;
+}
+.top-bar-right ul li {
+  // background: #8BC34A;
+   list-style-type: none;
+   text-align: right;
+   padding: 0.2rem;
+ }
+.top-bar ul li a {
+  color: #fff;
+}
+li.is-submenu-item.is-accordion-submenu-item {
+    background-color: #689F38;
+}
+.is-accordion-submenu-parent > a::after {
+  border-color: #ffffff transparent transparent;
+  right: 0;
+}
 
 /* general */
 body {
@@ -117,16 +130,42 @@ label {
 }
 
 #prevButton, #nextButton {
-  background: #7c4dff;  //deep purple
+  background-color: #7c4dff;  //deep purple
 }
 #scoreButton {
-  background: #FFC107;  //amber
+  background-color: #FFC107;  //amber
 }
 #score {
   color: #212121;
 }
 
+/* score display section */
+#showUserScores {
+  margin: 1rem;
+  padding: 1rem;
+  }
+#showAllUsersScores {
+  margin: 1rem;
+  padding: 1rem;
+}
+.scores {
+  padding: 0.5rem ;
+}
 
+.emphasis {
+  padding: 0.5rem;
+  background-color: #FFC107;  //amber
+  text-transform: uppercase;;
+}
+p.scores  {
+  color: #ffffff;
+  margin-bottom: 0;
+}
+p.emphasis {
+  color: #7c4dff;  //deep purple
+  margin-bottom: 0;
+  font-weight: bold;
+}
 
 
 
@@ -222,7 +261,13 @@ label {
    Modify as content requires.
    ========================================================================== */
 @media only screen and (max-width: 34,995rem) {
+  li.is-submenu-item.is-accordion-submenu-item {
+      background-color: #689F38;
+  }
+  .top-bar-right ul li {
+     background: #8BC34A;
 
+   }
 }
 
 @media only screen and (min-width: 35rem) {
@@ -230,6 +275,9 @@ label {
 
     .top-bar-left ul li {
         font-size: 1.5rem;
+    }
+    .dropdown.menu.medium-horizontal > li.is-dropdown-submenu-parent > a::after {
+      border-color: #ffffff transparent transparent;
     }
 
 }
