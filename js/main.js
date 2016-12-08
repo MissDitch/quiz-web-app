@@ -48,6 +48,9 @@ var nextButton = document.getElementById("nextButton");
 var scoreButton = document.getElementById("scoreButton");
 
 var scoreDisplay = document.getElementById("scoreDisplay");
+var myScores = document.getElementById("myScores");
+var everyoneScores = document.getElementById("everyoneScores");
+var sortedRanking = [];
 
 topBarRight.setAttribute("style", "display:none");
 quizContainer.setAttribute("style", "display:none");
@@ -119,16 +122,9 @@ function Player(username, password) {
   this.userName = username;
   this.passWord = password;
   this.storedScores = [];
-  this.getSumOfScores = function() {
-    var total = 0;
-    for (var i = 0; i < this.storedScores.length; i++) {
-      var score = this.storedScores[i];
-      total += score;
-    }
-    return total;
-  }
+  this.total = 0;
   this.getNameAndScore = function() {
-    return this.userName + " had scored " + this.getSumOfScores() + " points!";
+    return this.userName + " had scored " + this.total + " points!";
   }
   this.visits = 0;
   this.finished = true;
@@ -390,93 +386,99 @@ function showScore() {
   actualPlayer.storedScores.push(totalScore);
 }
 
-
+//shows player's total score
 function showUserScores(e) {
   e.preventDefault();
   var showUserScores = document.getElementById("showUserScores");
   var showAllUsersScores = document.getElementById("showAllUsersScores");
+  showAllUsersScores.setAttribute("style", "display:visible");
+  showUserScores.setAttribute("style", "display:visible");
 
-  //showAllUsersScores.setAttribute("style", "display:none");
   while(showAllUsersScores.firstChild) {
     showAllUsersScores.removeChild(showAllUsersScores.firstChild);
-
   }
-
-
+  showAllUsersScores.setAttribute("style", "display:none");
   while(showUserScores.firstChild) {
     showUserScores.removeChild(showUserScores.firstChild);
-
   }
 
   var userScores = actualPlayer.storedScores;
   var string = "You got these scores: " + userScores;
   var p = document.createElement("p");
-  //showUserScores.setAttribute("style", "display:visible");
 
   if (userScores.length === 0) {
     string = "You don't have any scores yet";
   }
-  p.setAttribute("class", "scores");
+  p.setAttribute("class", "emphasis");
   p.innerHTML = string;
   showUserScores.appendChild(p);
 }
 
+//fills sortedRanking array with all quizplayers, sorted on their total scores.
+function rank() {
+  for (var i = 0; i < playerArray.length; i++) {
+    var total = 0;
+    var scores = playerArray[i].storedScores;
+    for (var j = 0; j < scores.length; j++) {
+      total += scores[j];
+      playerArray[i].total = total;
+    }
+    sortedRanking.push(playerArray[i]);
+  }
+
+  sortedRanking.sort(function(a,b){
+    return parseFloat(b.total) - parseFloat(a.total);
+  });
+}
+
+//shows all the players' total scores in descending order
 function showAllUsersScores(e) {
   e.preventDefault();
   var showAllUsersScores = document.getElementById("showAllUsersScores");
   var showUserScores = document.getElementById("showUserScores");
-  //showUserScores.setAttribute("style", "display:none");
+  showAllUsersScores.setAttribute("style", "display:visible");
+  showUserScores.setAttribute("style", "display:visible");
 
+  rank();
 
-    while(showAllUsersScores.firstChild) {
-      showAllUsersScores.removeChild(showAllUsersScores.firstChild);
+  while(showAllUsersScores.firstChild) {
+    showAllUsersScores.removeChild(showAllUsersScores.firstChild);
+  }
+  while(showUserScores.firstChild) {
+    showUserScores.removeChild(showUserScores.firstChild);
+  }
+  showUserScores.setAttribute("style", "display:none");
 
-    }
-
-
-    while(showUserScores.firstChild) {
-      showUserScores.removeChild(showUserScores.firstChild);
-      
-    }
-
-
-  for (var i = 0; i < playerArray.length; i++) {
-    var scores = playerArray[i].storedScores;
-    var username = playerArray[i].userName;
-    var string;
-
+  for (var i = 0; i < sortedRanking.length; i++) {
+    var scores = sortedRanking[i].storedScores;
+    var username = sortedRanking[i].userName;
     var p = document.createElement("p");
+    var string;
+    var total = sortedRanking[i].total;
+
     if (username === actualPlayer.userName) {
-      string = "You got these scores: " + scores;
       if (scores.length === 0) {
-        string = "You don't have any scores yet";
+        scores = "no scores yet";
       }
+      string = "You got " + scores + ", total score is: " + total;
       p.setAttribute("class", "emphasis");
       p.setAttribute("id", "me");
     }
     else {
-      string = username + " got these scores: " + scores;
       if (scores.length === 0) {
-        string = username + " doesn't have any scores yet";
+        scores = "no scores yet";
       }
+      string = username + " got " + scores + ", total score is: " + total;
       p.setAttribute("class", "scores");
     }
 
     p.innerHTML = string;
     showAllUsersScores.appendChild(p);
-
-    //allUsersScores += string;
   }
-  //puts actualPlayer's scores on top of the list
+/*  //puts actualPlayer's scores on top of the list
   var me = document.getElementById("me");
-  showAllUsersScores.insertBefore(me, showAllUsersScores.firstChild);
-
-
-  //showAllUsersScores.innerHTML = allUsersScores;
+  showAllUsersScores.insertBefore(me, showAllUsersScores.firstChild);  */
 }
-
-var myScores = document.getElementById("myScores");
-var everyoneScores = document.getElementById("everyoneScores");
 
 myScores.addEventListener("click", showUserScores);
 everyoneScores.addEventListener("click", showAllUsersScores);
@@ -484,6 +486,5 @@ everyoneScores.addEventListener("click", showAllUsersScores);
 prevButton.addEventListener("click", previousQuestion);
 nextButton.addEventListener("click", nextQuestion);
 scoreButton.addEventListener("click", showScore);
-
 
 init();
