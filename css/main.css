@@ -13,10 +13,13 @@
 
 .title-bar {
   background: #689F38;
-  padding: 0.9rem; }
+  padding: 0.9rem;
+  margin-top: -1rem;
+}
 
 .top-bar {
   background: #689F38;
+  margin-top: -1rem;
 }
 .top-bar ul {
   background: #689F38;
@@ -26,6 +29,11 @@
    list-style-type: none;
    text-align: right;
    padding: 0.2rem;
+   border-top: 0.1rem solid #8BC34A;
+
+ }
+ .top-bar-right ul li:first-child {
+   border-top: none;
  }
 .top-bar ul li a {
   color: #fff;
@@ -81,7 +89,7 @@ label {
   padding: 1rem;
   font-size: smaller;
   font-weight: bold;
-//  display: inline-block;
+//  margin: 0.5rem 0 2rem 0;
 }
 
 /* login section */
@@ -105,6 +113,11 @@ label {
   margin: 1rem 1.5rem;
   font-weight: bold;
   //color: #D32F2F;
+}
+input#deleteBtn {
+    float: right;
+    background-color: #FFC107; //amber;
+    margin-top: 2rem;
 }
 
 /* quiz section */
@@ -140,6 +153,7 @@ label {
 }
 
 /* score display section */
+
 #showUserScores {
   margin: 1rem;
   padding: 1rem;
@@ -147,9 +161,18 @@ label {
 #showAllUsersScores {
   margin: 1rem;
   padding: 1rem;
+//  border: 1rem solid #689F38;  //dark-primary-color
+}
+.ranking {
+  background-color: #8BC34A;  //default-primary-color
+  border: 1rem solid #689F38;  //dark-primary-color
+}
+.ranking h2 {
+  font-weight: bold;
+  color: #ffffff;
 }
 .scores {
-  padding: 0.5rem ;
+ padding: 0.5rem;
 }
 
 .emphasis {
@@ -159,14 +182,19 @@ label {
 }
 p.scores  {
   color: #ffffff;
-  margin-bottom: 0;
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+  background-color: #689F38;
 }
 p.emphasis {
   color: #7c4dff;  //deep purple
   margin-bottom: 0;
   font-weight: bold;
 }
-
+p span {
+    display: inline-block;
+    float: right;
+    //font-size: 1.5rem;
 
 
 

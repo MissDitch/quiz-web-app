@@ -6,51 +6,50 @@ if (Modernizr.localstorage) {
   alert("no native support for HTML5 storage: (maybe try dojox.storage or a third-party solution ");
 }
 
-var topBarLeft = document.getElementById("topBarLeft");
-var topBarRight = document.getElementById("topBarRight");
-var user = document.getElementById("user");
-var total = document.getElementById("total");
-var logout = document.getElementById("logout");
+var topBarLeft = document.getElementById("topBarLeft"),
+    topBarRight = document.getElementById("topBarRight"),
+    user = document.getElementById("user"),
+    total = document.getElementById("total"),
+    logout = document.getElementById("logout");
 
 var welcome = document.getElementById("welcome");
 
-var login = document.getElementById("login");
-var loginForm = document.loginForm;
-var input1 = document.getElementById("userName");
-var userWarning = document.getElementById("userWarning");
-var input2 = document.getElementById("passWord");
-var passWarning = document.getElementById("passWarning");
+var login = document.getElementById("login"),
+    loginForm = document.loginForm,
+    input1 = document.getElementById("userName"),
+    userWarning = document.getElementById("userWarning"),
+    input2 = document.getElementById("passWord"),
+    passWarning = document.getElementById("passWarning");
 
-var loginBtn = document.getElementById("loginBtn");
-var accountBtn = document.getElementById("accountBtn");
+var loginBtn = document.getElementById("loginBtn"),
+    accountBtn = document.getElementById("accountBtn"),
+    deleteBtn = document.getElementById("deleteBtn");
 
-var actualPlayer;
-var playerString = localStorage.getItem("playerArray");
-var playerArray = JSON.parse(playerString);
+var actualPlayer = null,
+    playerString = localStorage.getItem("playerArray"),
+    playerArray = JSON.parse(playerString);
 
 var message = document.getElementById("message");
 
-var startButton = document.getElementById("startButton");
-var quizContainer = document.getElementById("quizContainer");
-var quizNotify  = document.getElementById("quizNotify");
-var allQuestions;
-var quizLength;
-var choices;
-//var storedAnswers;
-var index;
-var formContainer = document.getElementById("formContainer");
-var form = document.form1;
-var warning = document.getElementById("warning");
+var startButton = document.getElementById("startButton"),
+    quizContainer = document.getElementById("quizContainer"),
+    quizNotify  = document.getElementById("quizNotify"),
+    allQuestions = [],
+    quizLength = 0,
+    choices = [] ,
+    index = 0,
+    formContainer = document.getElementById("formContainer"),
+    form = document.form1,
+    warning = document.getElementById("warning");
 
-var quizButtons = document.getElementById("quizButtons");
-var prevButton = document.getElementById("prevButton");
-var nextButton = document.getElementById("nextButton");
-var scoreButton = document.getElementById("scoreButton");
+var quizButtons = document.getElementById("quizButtons"),
+    prevButton = document.getElementById("prevButton"),
+    nextButton = document.getElementById("nextButton"),
+    scoreButton = document.getElementById("scoreButton");
 
-var scoreDisplay = document.getElementById("scoreDisplay");
-var myScores = document.getElementById("myScores");
-var everyoneScores = document.getElementById("everyoneScores");
-var sortedRanking = [];
+var scoreDisplay = document.getElementById("scoreDisplay"),
+    myScores = document.getElementById("myScores"),
+    everyoneScores = document.getElementById("everyoneScores");
 
 topBarRight.setAttribute("style", "display:none");
 quizContainer.setAttribute("style", "display:none");
@@ -59,6 +58,8 @@ scoreDisplay.setAttribute("style", "display:visible");
 
 loginBtn.addEventListener("click", checkForm);
 accountBtn.addEventListener("click", checkForm);
+deleteBtn.addEventListener("click", checkForm);
+
 logout.addEventListener("click", logOut);
 startButton.addEventListener("click", startQuiz);
 resumeButton.addEventListener("click", startQuiz);
@@ -107,14 +108,25 @@ function checkForm(e) {
     }
   }
   else {
+    switch (e.target) {
+      case accountBtn:
+        createAccount(userName, passWord);
+        break;
+      case deleteBtn:
+        deleteAccount(userName, passWord);
+        break;
+      default:
+        logIn(userName, passWord);
+    }
+    /*
     if (e.target === loginBtn) {
       //if user clicked the login button
       logIn(userName, passWord);
     }
     if (e.target === accountBtn) {
-      //if user clicked the create account button
+      //if user clicked the 'create account' button
       createAccount(userName, passWord);
-    }
+    }  */
   }
 }
 
@@ -128,10 +140,10 @@ function Player(username, password) {
   }
   this.visits = 0;
   this.finished = true;
-  // this attribute stores the index of the question that is displayed if the player logs out before finishing the quiz
+  // answerAt attribute stores the index of the question that is displayed if the player logs out before finishing the quiz
   this.answerAt = 0;
-  /* if player logs out before finishing the quiz, the answers player has already given are stored here.
-  When player logs in again, she doesnt have to check those answers again  */
+  /* if player logs out before finishing quiz, answers player has already given are stored here.
+  When player logs in again, she doesnt have to give those answers again  */
   this.storedAnswers = [];
   this.totalScore = this.getNameAndScore();
 }
@@ -148,8 +160,23 @@ function createAccount(username, password) {
   input2.value = "";
 }
 
+function deleteAccount(username, password) {
+    for (var i = 0; i < playerArray.length; i++) {
+    var player = playerArray[i];
+    if (player.userName === username && player.passWord === password) {
+      var deleted = playerArray.splice(i, 1);
+      accountNotify.innerHTML = player.userName + "'s account is deleted";
+    }
+  }
+  localStorage.setItem("playerArray", JSON.stringify(playerArray));
+  input1.value = "";
+  input2.value = "";
+}
+
 function logIn(username, password) {
   createAccount.innerHTML = "";
+  accountNotify.innerHTML = "";
+  scoreDisplay.setAttribute("style", "display:visible");
   var playerString = localStorage.getItem("playerArray");
   playerArray = JSON.parse(playerString);
   console.log(playerArray);
@@ -206,10 +233,13 @@ function logIn(username, password) {
 function logOut(e) {
   e.preventDefault();
   login.setAttribute("style", "display:visible");
+  welcome.setAttribute("style", "display:visible");
   passWarning.setAttribute("style", "display:none");
-  //shows login panel and hides username and logout option
   topBarRight.setAttribute("style", "display:none");
   quizContainer.setAttribute("style", "display:none");
+  scoreDisplay.setAttribute("style", "display:none");
+
+
   if (actualPlayer.finished) {
     actualPlayer.storedAnswers.length = 0;
     actualPlayer.answerAt = 0;
@@ -234,7 +264,6 @@ function startQuiz() {
   }
 
   var stringQuestions = localStorage.getItem("allQuestions");
-  // Parse JSON string into object
   allQuestions = JSON.parse(stringQuestions);
   quizLength = allQuestions.length;
 
@@ -283,7 +312,7 @@ function showQuestion() {
       }
     }
 
-    //if radiobutton is clicked, the chosen answer is stored in a separate array: storedAnswers
+    //if radiobutton is clicked, the chosen answer is stored in array storedAnswers
     input.addEventListener("click", storeAnswer);
 
     var label = document.createElement("label");
@@ -316,7 +345,6 @@ function showQuizButtons() {
   if(index === quizLength) {
     //only if last question is shown user can see the score
     scoreButton.setAttribute("style", "display:visible");
-    //scoreButton.style.display = "inline";
     nextButton.setAttribute("style", "display:none");
     //prevButton still visible so user can go back and change answers
     var h2 = document.createElement("h2");
@@ -341,7 +369,7 @@ function previousQuestion() {
 }
 
 function nextQuestion() {
-  //shows next question only if answer has been chosen
+  //shows next question only if current question has been answered
   if (actualPlayer.storedAnswers[index] == null) {
     warning.innerHTML = "Please choose an answer!";
     return;
@@ -394,11 +422,11 @@ function showUserScores(e) {
   showAllUsersScores.setAttribute("style", "display:visible");
   showUserScores.setAttribute("style", "display:visible");
 
-  while(showAllUsersScores.firstChild) {
+  while (showAllUsersScores.firstChild) {
     showAllUsersScores.removeChild(showAllUsersScores.firstChild);
   }
-  showAllUsersScores.setAttribute("style", "display:none");
-  while(showUserScores.firstChild) {
+//  showAllUsersScores.setAttribute("style", "display:none");
+  while (showUserScores.firstChild) {
     showUserScores.removeChild(showUserScores.firstChild);
   }
 
@@ -416,6 +444,7 @@ function showUserScores(e) {
 
 //fills sortedRanking array with all quizplayers, sorted on their total scores.
 function rank() {
+  sortedRanking = [];
   for (var i = 0; i < playerArray.length; i++) {
     var total = 0;
     var scores = playerArray[i].storedScores;
@@ -429,6 +458,7 @@ function rank() {
   sortedRanking.sort(function(a,b){
     return parseFloat(b.total) - parseFloat(a.total);
   });
+  return sortedRanking;
 }
 
 //shows all the players' total scores in descending order
@@ -439,45 +469,50 @@ function showAllUsersScores(e) {
   showAllUsersScores.setAttribute("style", "display:visible");
   showUserScores.setAttribute("style", "display:visible");
 
-  rank();
+  var sortedRanking = rank();
 
-  while(showAllUsersScores.firstChild) {
+  while (showAllUsersScores.firstChild) {
     showAllUsersScores.removeChild(showAllUsersScores.firstChild);
   }
-  while(showUserScores.firstChild) {
+
+  while (showUserScores.firstChild) {
     showUserScores.removeChild(showUserScores.firstChild);
   }
+
   showUserScores.setAttribute("style", "display:none");
+  showAllUsersScores.setAttribute("class", "ranking");
+
+  var h2 = document.createElement("h2");
+  h2.innerHTML = "Ranking list";
+  showAllUsersScores.appendChild(h2);
 
   for (var i = 0; i < sortedRanking.length; i++) {
     var scores = sortedRanking[i].storedScores;
     var username = sortedRanking[i].userName;
     var p = document.createElement("p");
-    var string;
+    var string = "";
     var total = sortedRanking[i].total;
 
     if (username === actualPlayer.userName) {
+      string = "You got " + scores + "; total score is: <span>"  + total + "</span>";
       if (scores.length === 0) {
-        scores = "no scores yet";
+        string = "You got no scores yet";
       }
-      string = "You got " + scores + ", total score is: " + total;
       p.setAttribute("class", "emphasis");
       p.setAttribute("id", "me");
     }
     else {
+      string = username + " got " + scores + "; total score is: <span>"  + total + "</span>";
       if (scores.length === 0) {
-        scores = "no scores yet";
+        total = 0;
+        string = username + " got no scores yet <span>"  + total + "</span>";
       }
-      string = username + " got " + scores + ", total score is: " + total;
       p.setAttribute("class", "scores");
     }
 
     p.innerHTML = string;
     showAllUsersScores.appendChild(p);
   }
-/*  //puts actualPlayer's scores on top of the list
-  var me = document.getElementById("me");
-  showAllUsersScores.insertBefore(me, showAllUsersScores.firstChild);  */
 }
 
 myScores.addEventListener("click", showUserScores);

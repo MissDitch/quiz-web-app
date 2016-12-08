@@ -11,30 +11,40 @@
   </head>
 
   <body>
+    <noscript>
+      <p>This page requires a JavaScript-enabled brower.</p>
+    </noscript>
+
 
 <!-- TOP AND TITLE BAR    -->
+  <div data-sticky-container>
+    <div class="small-12 sticky" data-sticky data-sticky-on="small" >
 
-   <div class="title-bar" data-responsive-toggle="main-menu" data-hide-for="medium">
-      <button class="menu-icon" type="button" data-toggle></button>
-      <div class="title-bar-title">The Forest For The Trees Quiz</div>
-    </div>
-
-    <div class="top-bar" id="main-menu">
-      <div id="topBarLeft" class="top-bar-left">
-        <ul class=" menu hide-for-small-only" data-dropdown-menu>
-          <li class="menu-text">The Forest For The Trees</li>
-        </ul>
+      <div class="title-bar" data-responsive-toggle="main-menu" data-hide-for="medium">
+        <button class="menu-icon" type="button" data-toggle></button>
+        <div class="title-bar-title">The Forest For The Trees Quiz</div>
       </div>
 
-      <div id="topBarRight" class="top-bar-right">
-        <ul class="menu dropdown vertical medium-horizontal" data-responsive-menu="accordion medium-dropdown">
-          <li><a id="user" class="" href="#">username</a></li>
-          <li><a id="myScores" href="#">Show my scores</a></li>
-          <li><a id="everyoneScores" href="#">How am I doing so far?</a></li>
-          <li><a id="logout" href="#">Log out</a></li>
-        </ul>
+      <div class="top-bar" id="main-menu">
+        <div id="topBarLeft" class="top-bar-left">
+          <ul class=" menu hide-for-small-only" data-dropdown-menu>
+            <li class="menu-text">The Forest For The Trees</li>
+          </ul>
+        </div>
+
+        <div id="topBarRight" class="top-bar-right">
+          <ul class="menu dropdown vertical medium-horizontal" data-responsive-menu="accordion medium-dropdown">
+            <li><a id="user" class="" href="#">username</a></li>
+            <li><a id="myScores" href="#">Show my scores</a></li>
+            <li><a id="everyoneScores" href="#">How am I doing so far?</a></li>
+            <li><a id="logout" href="#">Log out</a></li>
+          </ul>
+        </div>
       </div>
+
     </div>
+  </div>
+
 
  <!--end TOP AND TITLE BAR    -->
 
@@ -47,7 +57,7 @@
     </div>
 
     <div class="row">
-      <div id="login" class="loginMain large-4 medium-6 small-12 columns ">
+      <div id="login" class="loginMain large-6 medium-6 small-12 columns ">
         <form id="" action="" class="loginForm" name="loginForm">
           <div class="row">
             <div class="login">
@@ -79,6 +89,7 @@
             <div class="submit">
               <input type="submit" id="loginBtn" class="buttons" value="Login" />
               <input type="submit" id="accountBtn" class="buttons" value="Create Account " />
+              <input type="submit" id="deleteBtn" class="buttons" value="Delete Account " />
             </div>
             <div class="notify">
               <small id="accountNotify" class=""></small>
