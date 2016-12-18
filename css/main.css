@@ -248,7 +248,6 @@ input#deleteBtn {
 	transform: translate(-20rem,0);
 	-webkit-transform: translate(-20rem,0);
 }
-
 #allScoreDisplay {
 	z-index: 10;
 	position: absolute;
@@ -258,12 +257,10 @@ input#deleteBtn {
   transform: translate(0rem, 0);
   transition: transform 0.3s ease;
 }
-
 #allScoreDisplay.slideInAllScores {
 	transform: translate(20rem,0);
 	-webkit-transform: translate(20rem,0);
 }
-
 #showUserScores, #showAllUsersScores {
   margin: 1rem;
   padding: 1rem 1.5rem;
@@ -274,21 +271,14 @@ input#deleteBtn {
  #showAllUsersScores{
    width: 18rem;
  }
-
 .ranking {
   background-color: #8BC34A;  //default-primary-color
   border: 1rem solid #689F38;  //dark-primary-color
 }
 .ranking h4 {
   font-weight: bold;
-//  color: #ffffff;
   margin-bottom: 2rem;
 }
-/*
-.scores {
- padding: 0.5rem;
-}
-*/
 .emphasis {
   padding: 0.5rem;
   background-color: #FFC107;  //amber
@@ -296,9 +286,6 @@ input#deleteBtn {
 }
 p.scores  {
   color: #ffffff;
-//  margin-bottom: 0.5rem;
-//  font-weight: bold;
-//  background-color: #689F38;
 }
 p.emphasis {
   color: #7c4dff;  //deep purple
@@ -306,9 +293,8 @@ p.emphasis {
   font-weight: bold;
 }
 p span {
-    display: inline-block;
-    float: right;
-    //font-size: 1.5rem;
+  display: inline-block;
+  float: right;
 }
 
 

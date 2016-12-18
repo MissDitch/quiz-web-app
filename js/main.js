@@ -466,7 +466,9 @@ function showScore() {
   results.innerHTML = output;
   actualPlayer.score = totalScore;
   actualPlayer.storedScores.push(totalScore);
+  updateScore(totalScore);
 }
+
 
 //shows player's total score
 function showUserScores(e) {
@@ -495,6 +497,7 @@ function showUserScores(e) {
 	}
 
   var p = document.createElement("p");
+  p.setAttribute("id", "scores");
 
   if (userScores.length === 0) {
     string = "You don't have any scores yet";
@@ -505,6 +508,20 @@ function showUserScores(e) {
 	showUserScores.appendChild(p);
 }
 
+function updateScore(score) {
+	var showUserScores = document.getElementById("showUserScores");
+	var scores = document.getElementById("scores");
+
+	if (myScoreDisplay.classList.contains("slideInMyScore")) {
+		scores.innerHTML = "";
+		var string = "";
+		for (var i = 0; i < actualPlayer.storedScores.length; i++) {
+			string += actualPlayer.storedScores[i] + "<br/>";
+		}
+
+ 		scores.innerHTML = string;
+	}
+}
 
 //fills sortedRanking array with all quizplayers, sorted on their total scores.
 function rank() {
