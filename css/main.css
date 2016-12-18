@@ -239,7 +239,7 @@ input#deleteBtn {
 	z-index: 10;
 	position: absolute;
 	right: -20rem;
-	top: 15rem;
+	top: 13rem;
   -webkit-transform: translate(0rem, 0);
   transform: translate(0rem, 0);
   transition: transform 0.3s ease;
@@ -251,15 +251,15 @@ input#deleteBtn {
 #allScoreDisplay {
 	z-index: 10;
 	position: absolute;
-	left: -20rem;
-	top: 15rem;
+	right: -20rem;
+	top: 25rem;
   -webkit-transform: translate(0rem, 0);
   transform: translate(0rem, 0);
   transition: transform 0.3s ease;
 }
 #allScoreDisplay.slideInAllScores {
-	transform: translate(20rem,0);
-	-webkit-transform: translate(20rem,0);
+	transform: translate(-20rem,0);
+	-webkit-transform: translate(-20rem,0);
 }
 #showUserScores, #showAllUsersScores {
   margin: 1rem;
@@ -438,8 +438,8 @@ p span {
   	top: 5rem;
   }
   #allScoreDisplay.slideInAllScores {
-  	transform: translate(40rem,0);
-  	-webkit-transform: translate(40rem,0);
+  	transform: translate(-33rem,0);
+  	-webkit-transform: translate(-33rem,0);
   }
 
 }

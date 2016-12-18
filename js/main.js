@@ -467,6 +467,7 @@ function showScore() {
   actualPlayer.score = totalScore;
   actualPlayer.storedScores.push(totalScore);
   updateScore(totalScore);
+  updateAllScores();
 }
 
 
@@ -522,6 +523,22 @@ function updateScore(score) {
  		scores.innerHTML = string;
 	}
 }
+
+function updateAllScores() {
+  if (allScoreDisplay.classList.contains("slideInAllScores")) {
+    var me = document.getElementById("me");
+    var string = "";
+    var newTotalScore = 0;
+
+    for (var i = 0; i < actualPlayer.storedScores.length; i++) {
+      newTotalScore += actualPlayer.storedScores[i];
+    }
+    //newTotalScore += newScore;
+    string = "Your total score is: <span>"  + newTotalScore + "</span>";
+    me.innerHTML = string;
+  }
+}
+
 
 //fills sortedRanking array with all quizplayers, sorted on their total scores.
 function rank() {
