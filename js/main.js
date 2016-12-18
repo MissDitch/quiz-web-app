@@ -30,6 +30,7 @@ var actualPlayer = null,
     playerArray = JSON.parse(playerString);
 
 var message = document.getElementById("message");
+var results = document.getElementById("results");
 
 var startButton = document.getElementById("startButton"),
     quizContainer = document.getElementById("quizContainer"),
@@ -47,22 +48,39 @@ var quizButtons = document.getElementById("quizButtons"),
     nextButton = document.getElementById("nextButton"),
     scoreButton = document.getElementById("scoreButton");
 
-var scoreDisplay = document.getElementById("scoreDisplay"),
+var myScoreDisplay = document.getElementById("myScoreDisplay"),
+    allScoreDisplay = document.getElementById("allScoreDisplay"),
     myScores = document.getElementById("myScores"),
     everyoneScores = document.getElementById("everyoneScores");
 
-topBarRight.setAttribute("style", "display:none");
-quizContainer.setAttribute("style", "display:none");
-quizButtons.setAttribute("style", "display:none");
-scoreDisplay.setAttribute("style", "display:visible");
+var progressBar = document.getElementById("progressBar");
+var progressMeter = document.getElementById("progressMeter");
+var progressMeterText = document.getElementById("progressMeterText");
+
+topBarRight.classList.add("hide");
+quizContainer.classList.add("hide");
+quizButtons.classList.add("hide");
+myScoreDisplay.classList.remove("hide");
+
+progressBar.classList.add("hide");
+progressBar.setAttribute("aria-valuemax", quizLength);
 
 loginBtn.addEventListener("click", checkForm);
 accountBtn.addEventListener("click", checkForm);
 deleteBtn.addEventListener("click", checkForm);
 
+myScores.addEventListener("click", showUserScores);
+everyoneScores.addEventListener("click", showAllUsersScores);
+
 logout.addEventListener("click", logOut);
 startButton.addEventListener("click", startQuiz);
 resumeButton.addEventListener("click", startQuiz);
+
+prevButton.addEventListener("click", previousQuestion);
+nextButton.addEventListener("click", nextQuestion);
+scoreButton.addEventListener("click", showScore);
+
+
 
 // thanks to https://codepen.io/KryptoniteDove/post/load-json-file-locally-using-pure-javascript
 // this function loads the quiz questions from external JSON file
@@ -176,7 +194,8 @@ function deleteAccount(username, password) {
 function logIn(username, password) {
   createAccount.innerHTML = "";
   accountNotify.innerHTML = "";
-  scoreDisplay.setAttribute("style", "display:visible");
+  myScoreDisplay.classList.remove("hide");
+  allScoreDisplay.classList.remove("hide");
   var playerString = localStorage.getItem("playerArray");
   playerArray = JSON.parse(playerString);
   console.log(playerArray);
@@ -189,33 +208,33 @@ function logIn(username, password) {
       var storedAnswers = actualPlayer.storedAnswers;
       index = actualPlayer.answerAt;
 
-      login.setAttribute("style", "display:none");
-      welcome.setAttribute("style", "display:none");
+      login.classList.add("hide");
+      welcome.classList.add("hide");
       //hides login panel and shows username and logout option
-      topBarRight.setAttribute("style", "display:visible");
+      topBarRight.classList.remove("hide");
       user.innerHTML = player.userName;
       //shows welcome message and startbutton
-      quizContainer.setAttribute("style", "display:visible");
+      quizContainer.classList.remove("hide");
       // three parts of quizContainer:
-      quizNotify.setAttribute("style", "display:visible");
-      formContainer.setAttribute("style", "display:none");
-      quizButtons.setAttribute("style", "display:none");
+      quizNotify.classList.remove("hide");
+      formContainer.classList.add("hide");
+      quizButtons.classList.add("hide");
 
       if (actualPlayer.visits === 0) {
           message.innerHTML = "Welcome to this quiz, " + actualPlayer.userName + "! <br />Would you like to start?";
-          startButton.setAttribute("style", "display:visible");
-          resumeButton.setAttribute("style", "display:none");
+          startButton.classList.remove("hide");
+          resumeButton.classList.add("hide");
       }
       else if (actualPlayer.visits > 0) {
         if (actualPlayer.finished === false) {
           message.innerHTML = "Welcome back " + actualPlayer.userName + "! <br />You want to finish the quiz?";
-          startButton.setAttribute("style", "display:none");
-          resumeButton.setAttribute("style", "display:visible");
+          startButton.classList.add("hide");
+          resumeButton.classList.remove("hide");
         }
         else {
           message.innerHTML = "Welcome back " + actualPlayer.userName + "!<br />Would you like to retake the quiz?";
-          startButton.setAttribute("style", "display:visible");
-          resumeButton.setAttribute("style", "display:none");
+          startButton.classList.remove("hide");
+          resumeButton.classList.add("hide");
         }
       }
     }
@@ -232,12 +251,13 @@ function logIn(username, password) {
 
 function logOut(e) {
   e.preventDefault();
-  login.setAttribute("style", "display:visible");
-  welcome.setAttribute("style", "display:visible");
-  passWarning.setAttribute("style", "display:none");
-  topBarRight.setAttribute("style", "display:none");
-  quizContainer.setAttribute("style", "display:none");
-  scoreDisplay.setAttribute("style", "display:none");
+  login.classList.remove("hide");
+  welcome.classList.remove("hide");
+  passWarning.classList.add("hide");
+  topBarRight.classList.add("hide");
+  quizContainer.classList.add("hide");
+  myScoreDisplay.classList.add("hide");
+  allScoreDisplay.classList.add("hide");
 
 
   if (actualPlayer.finished) {
@@ -254,8 +274,9 @@ function logOut(e) {
 
 function startQuiz() {
   index = actualPlayer.answerAt;
-  quizNotify.setAttribute("style", "display:none");
-  quizButtons.setAttribute("style", "display:visible");
+  quizNotify.classList.add("hide");
+  quizButtons.classList.remove("hide");
+  progressBar.classList.remove("hide");
 
   if (actualPlayer.finished) {
     actualPlayer.storedAnswers.length = 0;  //empty the array
@@ -266,7 +287,7 @@ function startQuiz() {
   var stringQuestions = localStorage.getItem("allQuestions");
   allQuestions = JSON.parse(stringQuestions);
   quizLength = allQuestions.length;
-
+  showProgress(index);
   showQuestion();
 }
 
@@ -276,7 +297,7 @@ function showQuestion() {
     return;
   }
   // display of question at given index:
-  formContainer.setAttribute("style", "display:visible");
+  formContainer.classList.remove("hide");
   form.innerHTML = "";
   var quizItem = allQuestions[index];
   var q = document.createElement("h3");
@@ -291,7 +312,8 @@ function showQuestion() {
   choices = allQuestions[index].choices;
 
   for (var i = 0; i < choices.length; i++) {
-    var p = document.createElement("p");
+    var div = document.createElement("div");
+		div.classList.add("radio");
 
     var input = document.createElement("input");
     input.setAttribute("id", i);
@@ -316,13 +338,29 @@ function showQuestion() {
     input.addEventListener("click", storeAnswer);
 
     var label = document.createElement("label");
+    label.setAttribute("class", "radio-label");
+		label.setAttribute("for", i);
     var choice = document.createTextNode(choices[i]);
     label.appendChild(choice);
 
-    p.appendChild(input);
-    p.appendChild(label);
-    form.appendChild(p);
+    div.appendChild(input);
+  	div.appendChild(label);
+    form.appendChild(div);
   }
+}
+
+function showProgress(index) {
+	 ///update progress bar
+  var increment = Math.ceil((index) / (quizLength) * 100);
+	if (index === 0) {
+		increment = 25;
+		progressMeter.style.background = "#ffffff";
+	}
+	else {
+		progressMeter.style.background = "#689F38";
+	}
+  progressMeter.style.width = (increment) + '%';
+  progressMeterText.innerHTML = (index) + ' out of ' + quizLength;
 }
 
 function storeAnswer(e) {
@@ -337,23 +375,23 @@ function storeAnswer(e) {
 function showQuizButtons() {
   if(index === 0) {
     //there is no previous question when first question is shown
-    prevButton.setAttribute("style", "display:none");
+    prevButton.classList.add("hide");
   }
   if (index > 0) {
-    prevButton.setAttribute("style", "display:visible");
+    prevButton.classList.remove("hide");
   }
   if(index === quizLength) {
     //only if last question is shown user can see the score
-    scoreButton.setAttribute("style", "display:visible");
-    nextButton.setAttribute("style", "display:none");
+    scoreButton.classList.remove("hide");
+    nextButton.classList.add("hide");
     //prevButton still visible so user can go back and change answers
     var h2 = document.createElement("h2");
     h2.innerHTML = "That's it! Would you like to see your score?";
     form.appendChild(h2);
   }
   else {
-    nextButton.setAttribute("style", "display:visible");
-    scoreButton.setAttribute("style", "display:none");
+    nextButton.classList.remove("hide");
+    scoreButton.classList.add("hide");
   }
 }
 
@@ -375,31 +413,45 @@ function nextQuestion() {
     return;
   }
   index++;
-    warning.innerHTML = "";
-    form.innerHTML = "";
-    $("#form1").fadeOut(0, function() {
-      var show = showQuestion();
-      $(this).attr('innerHTML', 'show').fadeIn(300);
-    });
+  warning.innerHTML = "";
+  form.innerHTML = "";
+  $("#form1").fadeOut(0, function() {
+    var show = showQuestion();
+    $(this).attr('innerHTML', 'show').fadeIn(300);
+  });
+  showProgress(index);
 }
 
 function showScore() {
   form.innerHTML = "";
-  prevButton.setAttribute("style", "display:none");
-  scoreButton.setAttribute("style", "display:none");
+  prevButton.classList.add("hide");
+  scoreButton.classList.add("hide");
+  progressBar.classList.add("hide");
 
-  quizNotify.setAttribute("style", "display:visible");
-  startButton.setAttribute("style", "display:visible");
-  resumeButton.setAttribute("style", "display:none");
+  quizNotify.classList.remove("hide");
+  startButton.classList.remove("hide");
+  resumeButton.classList.add("hide");
 
   var totalScore = 0;
   var storedAnswers = actualPlayer.storedAnswers;
   actualPlayer.finished = true;
 
+  var output = "";
+	var questionResult = "NA";
+
   for (var i = 0; i < storedAnswers.length; i++) {
     var score = parseInt(storedAnswers[i].value);
+		if (score === 1) {
+			questionResult = '<i class="fi-check green"></i>';
+
+		}
+		else {
+			questionResult = '<i class="fi-x red"></i>';
+		}
+		output = output + '<p>Question ' + (i + 1) + ': ' + questionResult + '</p> ';
     totalScore += score;
   }
+
 
   if (totalScore === allQuestions.length) {
     message.innerHTML = "Great! Your score is " + totalScore + "!<br />You can do the quiz again, although you don't really need to!";
@@ -410,6 +462,8 @@ function showScore() {
   else {
     message.innerHTML = "Well that's not too bad! Your score is " + totalScore + ".<br />Would you like to do the quiz again?";
   }
+
+  results.innerHTML = output;
   actualPlayer.score = totalScore;
   actualPlayer.storedScores.push(totalScore);
 }
@@ -418,29 +472,39 @@ function showScore() {
 function showUserScores(e) {
   e.preventDefault();
   var showUserScores = document.getElementById("showUserScores");
-  var showAllUsersScores = document.getElementById("showAllUsersScores");
-  showAllUsersScores.setAttribute("style", "display:visible");
-  showUserScores.setAttribute("style", "display:visible");
+//  var showAllUsersScores = document.getElementById("showAllUsersScores");
 
-  while (showAllUsersScores.firstChild) {
-    showAllUsersScores.removeChild(showAllUsersScores.firstChild);
-  }
-//  showAllUsersScores.setAttribute("style", "display:none");
-  while (showUserScores.firstChild) {
+
+ while (showUserScores.firstChild) {
     showUserScores.removeChild(showUserScores.firstChild);
   }
 
+  if (myScores.innerHTML === "Show my scores") {
+		myScores.innerHTML = "Hide my scores";
+		 }
+	else if (myScores.innerHTML === "Hide my scores") {
+		myScores.innerHTML = "Show my scores";
+	}
+
   var userScores = actualPlayer.storedScores;
-  var string = "You got these scores: " + userScores;
+	var h4 = document.createElement("h4");
+	h4.innerHTML = "Your scores";
+	var string = "";
+	for (var i = 0; i < userScores.length; i++) {
+		string += userScores[i] + "<br/>";
+	}
+
   var p = document.createElement("p");
 
   if (userScores.length === 0) {
     string = "You don't have any scores yet";
   }
-  p.setAttribute("class", "emphasis");
+  p.classList.add("emphasis");
   p.innerHTML = string;
-  showUserScores.appendChild(p);
+  showUserScores.appendChild(h4);
+	showUserScores.appendChild(p);
 }
+
 
 //fills sortedRanking array with all quizplayers, sorted on their total scores.
 function rank() {
@@ -465,9 +529,8 @@ function rank() {
 function showAllUsersScores(e) {
   e.preventDefault();
   var showAllUsersScores = document.getElementById("showAllUsersScores");
-  var showUserScores = document.getElementById("showUserScores");
-  showAllUsersScores.setAttribute("style", "display:visible");
-  showUserScores.setAttribute("style", "display:visible");
+//  var showUserScores = document.getElementById("showUserScores");
+  showAllUsersScores.setAttribute("class", "ranking");
 
   var sortedRanking = rank();
 
@@ -475,16 +538,16 @@ function showAllUsersScores(e) {
     showAllUsersScores.removeChild(showAllUsersScores.firstChild);
   }
 
-  while (showUserScores.firstChild) {
-    showUserScores.removeChild(showUserScores.firstChild);
-  }
+  if (everyoneScores.innerHTML === "Show all scores") {
+		everyoneScores.innerHTML = "Hide all scores";
+		 }
+	else if (everyoneScores.innerHTML === "Hide all scores") {
+		everyoneScores.innerHTML = "Show all scores";
+	}
 
-  showUserScores.setAttribute("style", "display:none");
-  showAllUsersScores.setAttribute("class", "ranking");
-
-  var h2 = document.createElement("h2");
-  h2.innerHTML = "Ranking list";
-  showAllUsersScores.appendChild(h2);
+  var h4 = document.createElement("h4");
+  h4.innerHTML = "Ranking list";
+  showAllUsersScores.appendChild(h4);
 
   for (var i = 0; i < sortedRanking.length; i++) {
     var scores = sortedRanking[i].storedScores;
@@ -494,7 +557,7 @@ function showAllUsersScores(e) {
     var total = sortedRanking[i].total;
 
     if (username === actualPlayer.userName) {
-      string = "You got " + scores + "; total score is: <span>"  + total + "</span>";
+      string = "Your total score is: <span>"  + total + "</span>";
       if (scores.length === 0) {
         string = "You got no scores yet";
       }
@@ -502,7 +565,7 @@ function showAllUsersScores(e) {
       p.setAttribute("id", "me");
     }
     else {
-      string = username + " got " + scores + "; total score is: <span>"  + total + "</span>";
+      string = username + "'s total score is: <span>"  + total + "</span>";
       if (scores.length === 0) {
         total = 0;
         string = username + " got no scores yet <span>"  + total + "</span>";
@@ -514,12 +577,5 @@ function showAllUsersScores(e) {
     showAllUsersScores.appendChild(p);
   }
 }
-
-myScores.addEventListener("click", showUserScores);
-everyoneScores.addEventListener("click", showAllUsersScores);
-
-prevButton.addEventListener("click", previousQuestion);
-nextButton.addEventListener("click", nextQuestion);
-scoreButton.addEventListener("click", showScore);
 
 init();

@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quiz app</title>
     <link rel="stylesheet" href="css/foundation.css">
+    <link rel="stylesheet" href="  https://cdn.jsdelivr.net/foundation-icons/3.0/foundation-icons.min.css">
+
     <link rel="stylesheet" href="css/main.css">
     <script src="js/vendor/modernizr-2.8.3.min.js"></script>
   </head>
@@ -16,42 +18,52 @@
     </noscript>
 
 
-<!-- TOP AND TITLE BAR    -->
-  <div data-sticky-container>
-    <div class="small-12 sticky" data-sticky data-sticky-on="small" >
+  <!-- TOP AND TITLE BAR    -->
+      <div data-sticky-container>
+        <div class="small-12 sticky" data-sticky data-sticky-on="small" >
 
-      <div class="title-bar" data-responsive-toggle="main-menu" data-hide-for="medium">
-        <button class="menu-icon" type="button" data-toggle></button>
-        <div class="title-bar-title">The Forest For The Trees Quiz</div>
+          <div class="title-bar" data-responsive-toggle="main-menu" data-hide-for="medium">
+            <button class="menu-icon" type="button" data-toggle></button>
+            <div class="title-bar-title">Flogging a Dead Horse Quiz</div>
+          </div>
+
+          <div class="top-bar" id="main-menu">
+            <div id="topBarLeft" class="top-bar-left">
+              <ul class=" menu hide-for-small-only" data-dropdown-menu>
+                <li class="menu-text">Flogging a Dead Horse</li>
+              </ul>
+            </div>
+
+            <div id="topBarRight" class="top-bar-right">
+              <ul class="menu accordion-menu vertical medium-horizontal" data-responsive-menu="accordion medium-dropdown">
+                <li><a id="user" class="" href="#">username</a></li>
+                <li><a id="myScores" href="#" data-toggle="myScoreDisplay">Show my scores</a></li>
+                <li><a id="everyoneScores" href="#" data-toggle="allScoreDisplay">Show all scores</a></li>
+                <li><a id="logout" href="#">Log out</a></li>
+
+              </ul>
+            </div>
+          </div>
+
+    			<!--  SCORE DISPLAY  -->
+          <div id="myScoreDisplay" class="row " data-toggler=".slideInMyScore">
+            <div id="showUserScores" class=""></div>
+
+          </div>
+          <div id="allScoreDisplay" class="row " data-toggler=".slideInAllScores">
+            <div id="showAllUsersScores" class=""></div>
+          </div>
+
+
+        </div>
       </div>
 
-      <div class="top-bar" id="main-menu">
-        <div id="topBarLeft" class="top-bar-left">
-          <ul class=" menu hide-for-small-only" data-dropdown-menu>
-            <li class="menu-text">The Forest For The Trees</li>
-          </ul>
-        </div>
-
-        <div id="topBarRight" class="top-bar-right">
-          <ul class="menu dropdown vertical medium-horizontal" data-responsive-menu="accordion medium-dropdown">
-            <li><a id="user" class="" href="#">username</a></li>
-            <li><a id="myScores" href="#">Show my scores</a></li>
-            <li><a id="everyoneScores" href="#">How am I doing so far?</a></li>
-            <li><a id="logout" href="#">Log out</a></li>
-          </ul>
-        </div>
-      </div>
-
-    </div>
-  </div>
-
-
- <!--end TOP AND TITLE BAR    -->
+<!--end TOP AND TITLE BAR    -->
 
 <!-- LOGIN    -->
 
    <div class="row">
-      <div class="message large-12 columns">
+      <div class="welcome large-12 columns">
         <h4 id="welcome">Please log in to do the quiz! <br> First time here? Create an account</h4>
       </div>
     </div>
@@ -104,11 +116,11 @@
 <!-- QUIZ   -->
 
     <div class="row">
-      <div id ="quizContainer" class="callout default-primary-color large-12 columns">
+      <div id ="quizContainer" class="callout default-primary-color medium-8 small-12 columns">
 
         <!-- message and start area  -->
         <div class="row">
-          <div id="quizNotify"class="message large-12 columns">
+          <div id="quizNotify"class="message small-11 columns">
              <h4 id="message"></h4>
              <div class="quizButtons large-10 medium-10 medium-push-1 columns">
                 <div class="quizButton large-2">
@@ -116,12 +128,13 @@
                   <input type="button" id="resumeButton" class="buttons" value="Resume quiz" />
                 </div>
              </div>
+             <div id="results" class="results"></div>
           </div>
         </div>
 
         <!-- quiz question area  -->
         <div class="row">
-          <div id="formContainer" class="main large-10 medium-10 medium-push-1 columns ">
+          <div id="formContainer" class="main">
             <form id="form1" class="answer" action="" name="form1">
             </form>
           </div>
@@ -129,7 +142,7 @@
 
         <!-- quiz buttons area  -->
         <div class="row">
-          <div id="quizButtons" class="quizButtons large-10 medium-10 medium-push-1 columns">
+          <div id="quizButtons" class="quizButtons large-10 medium-10 columns">
             <div id="previous"  class="quizButton large-2">
               <input type="button" id="prevButton" class="buttons" value="Previous" />
             </div>
@@ -142,25 +155,35 @@
           </div>
         </div>
 
-        <!-- warning in case question is not answered  -->
-        <div class="warning">
-          <small id="warning" class=""></small>
+        <!-- warning message area  -->
+				<div class="row large-10 medium-10 columns">
+							<!-- warning in case question is not answered  -->
+     		   <div class="warning">
+        	  <small id="warning" class=""></small>
+      	  </div>
+				</div>
+
+        <!-- progress bar area  -->
+        <div id="progressBar" class="">
+				  <div class="progress" role="progressbar" tabindex="0" aria-valuenow="0" aria-valuemin="0" aria-valuetext="0 out of quizLength" aria-valuemax="3">
+            <span id="progressMeter" class="progress-meter" style="width: 25%">
+              <p id="progressMeterText" class="progress-meter-text"> </p>
+            </span>
+          </div>
         </div>
 
       </div>
     </div>
 <!-- end QUIZ   -->
 
-<!--  SCORE DISPLAY  -->
-<div id="scoreDisplay" class="row">
-  <div id="showUserScores" class=""></div>
-  <div id="showAllUsersScores" class=""></div>
-</div>
 
 
-    <script src="js/vendor/jquery.js"></script>
+
+   <script src="js/vendor/jquery.js"></script>
     <script src="js/vendor/what-input.js"></script>
-    <script src="js/vendor/foundation.js"></script>
+      <script src="js/vendor/foundation.js"></script>
+<!--     <script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/foundation/6.2.4-rc2/foundation.min.js"></script> -->
     <script src="js/main.js"></script>
 
     </body>
