@@ -51,7 +51,9 @@ var quizButtons = document.getElementById("quizButtons"),
 var myScoreDisplay = document.getElementById("myScoreDisplay"),
     allScoreDisplay = document.getElementById("allScoreDisplay"),
     myScores = document.getElementById("myScores"),
-    everyoneScores = document.getElementById("everyoneScores");
+    everyoneScores = document.getElementById("everyoneScores"),
+    mineHidden = true,
+    allHidden = true;
 
 var progressBar = document.getElementById("progressBar");
 var progressMeter = document.getElementById("progressMeter");
@@ -88,7 +90,7 @@ function loadJSON(callback) {
   var xobj = new XMLHttpRequest();
   xobj.overrideMimeType("application/json");
   xobj.open('GET', 'http://localhost/quiz-web-app/js/quizQuestions.json', true);
-  //xobj.open('GET', 'file:///C:/Users/Marian standaard/Projecten/quiz-web-app/js/quizQuestions.json', true);
+//  xobj.open('GET', 'https://drive.google.com/drive/folders/0B3DFzn0jeZDkR1Y0VE1hZjN4T2s/quizQuestionsRemote.json', true);
   xobj.onreadystatechange = function () {
     if (xobj.readyState === 4 && xobj.status === 200) {
       /* Required use of an anonymous callback as .open will NOT return a value
@@ -100,6 +102,7 @@ function loadJSON(callback) {
 }
 
 function init() {
+
   loadJSON(function(response) {
     // Parse JSON string into object
     allQuestions = JSON.parse(response);
@@ -112,6 +115,7 @@ function init() {
 function checkForm(e) {
   e.preventDefault();
   userWarning.innerHTML = "";
+  passWarning.innerHTML = "";
   var userName = input1.value;
   var passWord = input2.value;
 
@@ -136,15 +140,7 @@ function checkForm(e) {
       default:
         logIn(userName, passWord);
     }
-    /*
-    if (e.target === loginBtn) {
-      //if user clicked the login button
-      logIn(userName, passWord);
-    }
-    if (e.target === accountBtn) {
-      //if user clicked the 'create account' button
-      createAccount(userName, passWord);
-    }  */
+
   }
 }
 
@@ -194,11 +190,18 @@ function deleteAccount(username, password) {
 function logIn(username, password) {
   createAccount.innerHTML = "";
   accountNotify.innerHTML = "";
+  results.innerHTML = "";
+
   myScoreDisplay.classList.remove("hide");
   allScoreDisplay.classList.remove("hide");
   var playerString = localStorage.getItem("playerArray");
   playerArray = JSON.parse(playerString);
   console.log(playerArray);
+
+  if (playerArray.length === 0) {
+    passWarning.innerHTML = "Please create an account first";
+    return;
+  }
 
   for (var i = 0; i < playerArray.length; i++) {
     var player = playerArray[i];
@@ -246,6 +249,7 @@ function logIn(username, password) {
     }
     input1.value = "";
     input2.value = "";
+
   }
 }
 
@@ -253,12 +257,11 @@ function logOut(e) {
   e.preventDefault();
   login.classList.remove("hide");
   welcome.classList.remove("hide");
-  passWarning.classList.add("hide");
   topBarRight.classList.add("hide");
   quizContainer.classList.add("hide");
+  progressBar.classList.add("hide");
   myScoreDisplay.classList.add("hide");
   allScoreDisplay.classList.add("hide");
-
 
   if (actualPlayer.finished) {
     actualPlayer.storedAnswers.length = 0;
@@ -270,6 +273,8 @@ function logOut(e) {
 
   actualPlayer.visits += 1;
   localStorage.setItem("playerArray", JSON.stringify(playerArray));
+  userWarning.innerHTML = "";
+  passWarning.innerHTML = "";
 }
 
 function startQuiz() {
@@ -482,11 +487,13 @@ function showUserScores(e) {
     showUserScores.removeChild(showUserScores.firstChild);
   }
 
-  if (myScores.innerHTML === "Show my scores") {
+  if (mineHidden) {
 		myScores.innerHTML = "Hide my scores";
-		 }
-	else if (myScores.innerHTML === "Hide my scores") {
+		mineHidden = false;
+	}
+	else {
 		myScores.innerHTML = "Show my scores";
+		mineHidden = true;
 	}
 
   var userScores = actualPlayer.storedScores;
@@ -572,11 +579,13 @@ function showAllUsersScores(e) {
     showAllUsersScores.removeChild(showAllUsersScores.firstChild);
   }
 
-  if (everyoneScores.innerHTML === "Show all scores") {
+  if (allHidden) {
 		everyoneScores.innerHTML = "Hide all scores";
-		 }
-	else if (everyoneScores.innerHTML === "Hide all scores") {
+		allHidden = false;
+	}
+	else {
 		everyoneScores.innerHTML = "Show all scores";
+		allHidden = true;
 	}
 
   var h4 = document.createElement("h4");
