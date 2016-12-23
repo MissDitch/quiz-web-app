@@ -26,7 +26,6 @@
   background: #689F38;
 }
 .top-bar-right ul li {
-  // background: #8BC34A;
    list-style-type: none;
    text-align: right;
    padding: 0.2rem;
@@ -36,8 +35,12 @@
  .top-bar-right ul li:first-child {
    border-top: none;
  }
-.top-bar ul li a {
-  color: #fff;
+ .top-bar ul li a {
+   color: #ffffff;
+ 	transition: color 0.5s ease;
+ }
+.top-bar ul li a:hover {
+  color: #7c4dff;  //deep purple;
 }
 li.is-submenu-item.is-accordion-submenu-item {
     background-color: #689F38;
@@ -135,9 +138,23 @@ input[type="button"], input[type="submit"] {
   background-color: #7c4dff;  //deep purple
   padding: 1.0rem 1.0rem;
   margin-right: 1rem;
+	transition: background-color 0.5s ease; 
 }
 input[type="button"]:focus, input[type="submit"]:focus {
   outline:0;
+}
+input[type="button"]:hover, input[type="submit"]:hover {
+  color: #000000;
+  background-color: #FFC107;  //amber
+}
+input#deleteBtn {
+    float: right;
+    background-color: #FFC107; //amber;
+    margin-top: 2rem;
+}
+input#deleteBtn:hover {
+  //color: #ffffff;
+  background-color: #7c4dff;  //deep purple
 }
 label {
   text-align: left;
@@ -173,11 +190,6 @@ label {
   font-weight: bold;
   //color: #D32F2F;
 }
-input#deleteBtn {
-    float: right;
-    background-color: #FFC107; //amber;
-    margin-top: 2rem;
-}
 
 /* quiz section */
 .callout {
@@ -206,27 +218,13 @@ input#deleteBtn {
 .quizButton {
   display: inline-block;
 }
-
-#prevButton, #nextButton {
-  background-color: #7c4dff;  //deep purple
-}
-#startButton:hover, #prevButton:hover, #nextButton:hover {
-	background-color: #FFC107;  //amber
-}
-#startButton:hover, #previous:hover, #next:hover {
-	color: #000000;
-}
 #scoreButton {
+  color: #000000;
   background-color: #FFC107;  //amber
 }
 #scoreButton:hover {
+  color: #FFFFFF;
   background-color: #7c4dff;  //deep purple
-}
-#score {
-  color: #212121;
-}
-#score:hover {
-  color: #ffffff;
 }
 .results {
   color: #ffffff;

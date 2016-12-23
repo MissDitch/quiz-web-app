@@ -110,12 +110,17 @@ function init() {
   });
 }
 
+// clears all messages on the login screen
+function clearMessage() {
+  userWarning.innerHTML = "";
+  passWarning.innerHTML = "";
+  accountNotify.innerHTML = "";
+}
 
 //checks if username and password are entered
 function checkForm(e) {
   e.preventDefault();
-  userWarning.innerHTML = "";
-  passWarning.innerHTML = "";
+  clearMessage();
   var userName = input1.value;
   var passWord = input2.value;
 
@@ -163,9 +168,7 @@ function Player(username, password) {
 }
 
 function createAccount(username, password) {
-  userWarning.innerHTML = "";
-  passWarning.innerHTML = "";
-
+  clearMessage();
   player = new Player(username, password);
   playerArray.push(player);
   localStorage.setItem("playerArray", JSON.stringify(playerArray));
@@ -188,8 +191,7 @@ function deleteAccount(username, password) {
 }
 
 function logIn(username, password) {
-  createAccount.innerHTML = "";
-  accountNotify.innerHTML = "";
+  clearMessage();
   results.innerHTML = "";
 
   myScoreDisplay.classList.remove("hide");
@@ -273,8 +275,7 @@ function logOut(e) {
 
   actualPlayer.visits += 1;
   localStorage.setItem("playerArray", JSON.stringify(playerArray));
-  userWarning.innerHTML = "";
-  passWarning.innerHTML = "";
+  clearMessage();
 }
 
 function startQuiz() {
