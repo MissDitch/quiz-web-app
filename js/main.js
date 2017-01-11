@@ -82,8 +82,6 @@ prevButton.addEventListener("click", previousQuestion);
 nextButton.addEventListener("click", nextQuestion);
 scoreButton.addEventListener("click", showScore);
 
-
-
 // thanks to https://codepen.io/KryptoniteDove/post/load-json-file-locally-using-pure-javascript
 // this function loads the quiz questions from external JSON file
 function loadJSON(callback) {
@@ -476,13 +474,11 @@ function showScore() {
   updateAllScores();
 }
 
-
 //shows player's total score
 function showUserScores(e) {
   e.preventDefault();
   var showUserScores = document.getElementById("showUserScores");
 //  var showAllUsersScores = document.getElementById("showAllUsersScores");
-
 
  while (showUserScores.firstChild) {
     showUserScores.removeChild(showUserScores.firstChild);
@@ -545,8 +541,8 @@ function updateAllScores() {
     string = "Your total score is: <span>"  + newTotalScore + "</span>";
     me.innerHTML = string;
   }
-}
 
+  
 
 //fills sortedRanking array with all quizplayers, sorted on their total scores.
 function rank() {
