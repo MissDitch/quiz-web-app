@@ -541,7 +541,7 @@ function updateAllScores() {
     string = "Your total score is: <span>"  + newTotalScore + "</span>";
     me.innerHTML = string;
   }
-
+}
   
 
 //fills sortedRanking array with all quizplayers, sorted on their total scores.
