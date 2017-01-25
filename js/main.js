@@ -6,81 +6,92 @@ if (Modernizr.localstorage) {
   alert("no native support for HTML5 storage: (maybe try dojox.storage or a third-party solution ");
 }
 
-var topBarLeft = document.getElementById("topBarLeft"),
-    topBarRight = document.getElementById("topBarRight"),
+var myApp = function() {
+
+var quizLength = 0,
+    choices = [] ,
+    index = 0;
+var actualPlayer = null;   
+var form = document.form1;
+
+var prevButton = document.getElementById("prevButton"),
+    nextButton = document.getElementById("nextButton"),
+    scoreButton = document.getElementById("scoreButton");
+
+var progressBar = document.getElementById("progressBar");
+var progressMeter = document.getElementById("progressMeter");
+var progressMeterText = document.getElementById("progressMeterText");
+
+progressBar.classList.add("hide");
+progressBar.setAttribute("aria-valuemax", quizLength);
+
+prevButton.addEventListener("click", previousQuestion);
+nextButton.addEventListener("click", nextQuestion);
+scoreButton.addEventListener("click", showScore);
+
+
+function init() {
+
+  var topBarRight = document.getElementById("topBarRight"),
     user = document.getElementById("user"),
     total = document.getElementById("total"),
     logout = document.getElementById("logout");
 
-var welcome = document.getElementById("welcome");
+  var welcome = document.getElementById("welcome");
 
-var login = document.getElementById("login"),
+  var login = document.getElementById("login"),
     loginForm = document.loginForm,
     input1 = document.getElementById("userName"),
     userWarning = document.getElementById("userWarning"),
     input2 = document.getElementById("passWord"),
     passWarning = document.getElementById("passWarning");
 
-var loginBtn = document.getElementById("loginBtn"),
+  var loginBtn = document.getElementById("loginBtn"),
     accountBtn = document.getElementById("accountBtn"),
     deleteBtn = document.getElementById("deleteBtn");
 
-var actualPlayer = null,
-    playerString = localStorage.getItem("playerArray"),
+
+  var playerString = localStorage.getItem("playerArray"),
     playerArray = JSON.parse(playerString);
 
-var message = document.getElementById("message");
-var results = document.getElementById("results");
+  var quizContainer = document.getElementById("quizContainer"),
+    quizNotify  = document.getElementById("quizNotify");    
 
-var startButton = document.getElementById("startButton"),
-    quizContainer = document.getElementById("quizContainer"),
-    quizNotify  = document.getElementById("quizNotify"),
-    allQuestions = [],
-    quizLength = 0,
-    choices = [] ,
-    index = 0,
-    formContainer = document.getElementById("formContainer"),
-    form = document.form1,
-    warning = document.getElementById("warning");
-
-var quizButtons = document.getElementById("quizButtons"),
-    prevButton = document.getElementById("prevButton"),
-    nextButton = document.getElementById("nextButton"),
-    scoreButton = document.getElementById("scoreButton");
-
-var myScoreDisplay = document.getElementById("myScoreDisplay"),
+  var myScoreDisplay = document.getElementById("myScoreDisplay"),
     allScoreDisplay = document.getElementById("allScoreDisplay"),
     myScores = document.getElementById("myScores"),
     everyoneScores = document.getElementById("everyoneScores"),
     mineHidden = true,
-    allHidden = true;
+    allHidden = true;   
 
-var progressBar = document.getElementById("progressBar");
-var progressMeter = document.getElementById("progressMeter");
-var progressMeterText = document.getElementById("progressMeterText");
+  var message = document.getElementById("message");
+  var results = document.getElementById("results");
 
-topBarRight.classList.add("hide");
-quizContainer.classList.add("hide");
-quizButtons.classList.add("hide");
-myScoreDisplay.classList.remove("hide");
+  var startButton = document.getElementById("startButton");
 
-progressBar.classList.add("hide");
-progressBar.setAttribute("aria-valuemax", quizLength);
+  var allQuestions = [];
+  var formContainer = document.getElementById("formContainer");
+  var warning = document.getElementById("warning");
 
-loginBtn.addEventListener("click", checkForm);
-accountBtn.addEventListener("click", checkForm);
-deleteBtn.addEventListener("click", checkForm);
+  var quizButtons = document.getElementById("quizButtons");    
 
-myScores.addEventListener("click", showUserScores);
-everyoneScores.addEventListener("click", showAllUsersScores);
+  myScoreDisplay.classList.remove("hide");
 
-logout.addEventListener("click", logOut);
-startButton.addEventListener("click", startQuiz);
-resumeButton.addEventListener("click", startQuiz);
+  myScores.addEventListener("click", showUserScores);
+  everyoneScores.addEventListener("click", showAllUsersScores);
 
-prevButton.addEventListener("click", previousQuestion);
-nextButton.addEventListener("click", nextQuestion);
-scoreButton.addEventListener("click", showScore);
+  logout.addEventListener("click", logOut);
+  startButton.addEventListener("click", startQuiz);
+  resumeButton.addEventListener("click", startQuiz);    
+
+  loginBtn.addEventListener("click", checkForm);
+  accountBtn.addEventListener("click", checkForm);
+  deleteBtn.addEventListener("click", checkForm);    
+
+  topBarRight.classList.add("hide");
+  quizContainer.classList.add("hide");
+  quizButtons.classList.add("hide");
+
 
 // thanks to https://codepen.io/KryptoniteDove/post/load-json-file-locally-using-pure-javascript
 // this function loads the quiz questions from external JSON file
@@ -99,14 +110,12 @@ function loadJSON(callback) {
   xobj.send(null);
 }
 
-function init() {
-
   loadJSON(function(response) {
     // Parse JSON string into object
     allQuestions = JSON.parse(response);
     localStorage.setItem("allQuestions", response);
   });
-}
+
 
 // clears all messages on the login screen
 function clearMessage() {
@@ -275,6 +284,154 @@ function logOut(e) {
   localStorage.setItem("playerArray", JSON.stringify(playerArray));
   clearMessage();
 }
+
+//shows player's total score
+function showUserScores(e) {
+  e.preventDefault();
+  var showUserScores = document.getElementById("showUserScores");
+//  var showAllUsersScores = document.getElementById("showAllUsersScores");
+
+ while (showUserScores.firstChild) {
+    showUserScores.removeChild(showUserScores.firstChild);
+  }
+
+  if (mineHidden) {
+		myScores.innerHTML = "Hide my scores";
+		mineHidden = false;
+	}
+	else {
+		myScores.innerHTML = "Show my scores";
+		mineHidden = true;
+	}
+
+  var userScores = actualPlayer.storedScores;
+	var h4 = document.createElement("h4");
+	h4.innerHTML = "Your scores";
+	var string = "";
+	for (var i = 0; i < userScores.length; i++) {
+		string += userScores[i] + "<br/>";
+	}
+
+  var p = document.createElement("p");
+  p.setAttribute("id", "scores");
+
+  if (userScores.length === 0) {
+    string = "You don't have any scores yet";
+  }
+  p.classList.add("emphasis");
+  p.innerHTML = string;
+  showUserScores.appendChild(h4);
+	showUserScores.appendChild(p);
+}
+
+function updateScore(score) {
+	var showUserScores = document.getElementById("showUserScores");
+	var scores = document.getElementById("scores");
+
+	if (myScoreDisplay.classList.contains("slideInMyScore")) {
+		scores.innerHTML = "";
+		var string = "";
+		for (var i = 0; i < actualPlayer.storedScores.length; i++) {
+			string += actualPlayer.storedScores[i] + "<br/>";
+		}
+
+ 		scores.innerHTML = string;
+	}
+}
+
+function updateAllScores() {
+  if (allScoreDisplay.classList.contains("slideInAllScores")) {
+    var me = document.getElementById("me");
+    var string = "";
+    var newTotalScore = 0;
+
+    for (var i = 0; i < actualPlayer.storedScores.length; i++) {
+      newTotalScore += actualPlayer.storedScores[i];
+    }
+    //newTotalScore += newScore;
+    string = "Your total score is: <span>"  + newTotalScore + "</span>";
+    me.innerHTML = string;
+  }
+}
+  
+
+//fills sortedRanking array with all quizplayers, sorted on their total scores.
+function rank() {
+  sortedRanking = [];
+  for (var i = 0; i < playerArray.length; i++) {
+    var total = 0;
+    var scores = playerArray[i].storedScores;
+    for (var j = 0; j < scores.length; j++) {
+      total += scores[j];
+      playerArray[i].total = total;
+    }
+    sortedRanking.push(playerArray[i]);
+  }
+
+  sortedRanking.sort(function(a,b){
+    return parseFloat(b.total) - parseFloat(a.total);
+  });
+  return sortedRanking;
+}
+
+//shows all the players' total scores in descending order
+function showAllUsersScores(e) {
+  e.preventDefault();
+  var showAllUsersScores = document.getElementById("showAllUsersScores");
+//  var showUserScores = document.getElementById("showUserScores");
+  showAllUsersScores.setAttribute("class", "ranking");
+
+  var sortedRanking = rank();
+
+  while (showAllUsersScores.firstChild) {
+    showAllUsersScores.removeChild(showAllUsersScores.firstChild);
+  }
+
+  if (allHidden) {
+		everyoneScores.innerHTML = "Hide all scores";
+		allHidden = false;
+	}
+	else {
+		everyoneScores.innerHTML = "Show all scores";
+		allHidden = true;
+	}
+
+  var h4 = document.createElement("h4");
+  h4.innerHTML = "Ranking list";
+  showAllUsersScores.appendChild(h4);
+
+  for (var i = 0; i < sortedRanking.length; i++) {
+    var scores = sortedRanking[i].storedScores;
+    var username = sortedRanking[i].userName;
+    var p = document.createElement("p");
+    var string = "";
+    var total = sortedRanking[i].total;
+
+    if (username === actualPlayer.userName) {
+      string = "Your total score is: <span>"  + total + "</span>";
+      if (scores.length === 0) {
+        string = "You got no scores yet";
+      }
+      p.setAttribute("class", "emphasis");
+      p.setAttribute("id", "me");
+    }
+    else {
+      string = username + "'s total score is: <span>"  + total + "</span>";
+      if (scores.length === 0) {
+        total = 0;
+        string = username + " got no scores yet <span>"  + total + "</span>";
+      }
+      p.setAttribute("class", "scores");
+    }
+
+    p.innerHTML = string;
+    showAllUsersScores.appendChild(p);
+  }
+}
+
+}
+
+/*   end of init  */
 
 function startQuiz() {
   index = actualPlayer.answerAt;
@@ -453,6 +610,7 @@ function showScore() {
 			questionResult = '<i class="fi-x red"></i>';
 		}
 		output = output + '<p>Question ' + (i + 1) + ': ' + questionResult + '</p> ';
+    
     totalScore += score;
   }
 
@@ -474,148 +632,10 @@ function showScore() {
   updateAllScores();
 }
 
-//shows player's total score
-function showUserScores(e) {
-  e.preventDefault();
-  var showUserScores = document.getElementById("showUserScores");
-//  var showAllUsersScores = document.getElementById("showAllUsersScores");
-
- while (showUserScores.firstChild) {
-    showUserScores.removeChild(showUserScores.firstChild);
+return {
+    start: init
   }
 
-  if (mineHidden) {
-		myScores.innerHTML = "Hide my scores";
-		mineHidden = false;
-	}
-	else {
-		myScores.innerHTML = "Show my scores";
-		mineHidden = true;
-	}
+}();
 
-  var userScores = actualPlayer.storedScores;
-	var h4 = document.createElement("h4");
-	h4.innerHTML = "Your scores";
-	var string = "";
-	for (var i = 0; i < userScores.length; i++) {
-		string += userScores[i] + "<br/>";
-	}
-
-  var p = document.createElement("p");
-  p.setAttribute("id", "scores");
-
-  if (userScores.length === 0) {
-    string = "You don't have any scores yet";
-  }
-  p.classList.add("emphasis");
-  p.innerHTML = string;
-  showUserScores.appendChild(h4);
-	showUserScores.appendChild(p);
-}
-
-function updateScore(score) {
-	var showUserScores = document.getElementById("showUserScores");
-	var scores = document.getElementById("scores");
-
-	if (myScoreDisplay.classList.contains("slideInMyScore")) {
-		scores.innerHTML = "";
-		var string = "";
-		for (var i = 0; i < actualPlayer.storedScores.length; i++) {
-			string += actualPlayer.storedScores[i] + "<br/>";
-		}
-
- 		scores.innerHTML = string;
-	}
-}
-
-function updateAllScores() {
-  if (allScoreDisplay.classList.contains("slideInAllScores")) {
-    var me = document.getElementById("me");
-    var string = "";
-    var newTotalScore = 0;
-
-    for (var i = 0; i < actualPlayer.storedScores.length; i++) {
-      newTotalScore += actualPlayer.storedScores[i];
-    }
-    //newTotalScore += newScore;
-    string = "Your total score is: <span>"  + newTotalScore + "</span>";
-    me.innerHTML = string;
-  }
-}
-  
-
-//fills sortedRanking array with all quizplayers, sorted on their total scores.
-function rank() {
-  sortedRanking = [];
-  for (var i = 0; i < playerArray.length; i++) {
-    var total = 0;
-    var scores = playerArray[i].storedScores;
-    for (var j = 0; j < scores.length; j++) {
-      total += scores[j];
-      playerArray[i].total = total;
-    }
-    sortedRanking.push(playerArray[i]);
-  }
-
-  sortedRanking.sort(function(a,b){
-    return parseFloat(b.total) - parseFloat(a.total);
-  });
-  return sortedRanking;
-}
-
-//shows all the players' total scores in descending order
-function showAllUsersScores(e) {
-  e.preventDefault();
-  var showAllUsersScores = document.getElementById("showAllUsersScores");
-//  var showUserScores = document.getElementById("showUserScores");
-  showAllUsersScores.setAttribute("class", "ranking");
-
-  var sortedRanking = rank();
-
-  while (showAllUsersScores.firstChild) {
-    showAllUsersScores.removeChild(showAllUsersScores.firstChild);
-  }
-
-  if (allHidden) {
-		everyoneScores.innerHTML = "Hide all scores";
-		allHidden = false;
-	}
-	else {
-		everyoneScores.innerHTML = "Show all scores";
-		allHidden = true;
-	}
-
-  var h4 = document.createElement("h4");
-  h4.innerHTML = "Ranking list";
-  showAllUsersScores.appendChild(h4);
-
-  for (var i = 0; i < sortedRanking.length; i++) {
-    var scores = sortedRanking[i].storedScores;
-    var username = sortedRanking[i].userName;
-    var p = document.createElement("p");
-    var string = "";
-    var total = sortedRanking[i].total;
-
-    if (username === actualPlayer.userName) {
-      string = "Your total score is: <span>"  + total + "</span>";
-      if (scores.length === 0) {
-        string = "You got no scores yet";
-      }
-      p.setAttribute("class", "emphasis");
-      p.setAttribute("id", "me");
-    }
-    else {
-      string = username + "'s total score is: <span>"  + total + "</span>";
-      if (scores.length === 0) {
-        total = 0;
-        string = username + " got no scores yet <span>"  + total + "</span>";
-      }
-      p.setAttribute("class", "scores");
-    }
-
-    p.innerHTML = string;
-    showAllUsersScores.appendChild(p);
-  }
-}
-
-init();
+myApp.start();
